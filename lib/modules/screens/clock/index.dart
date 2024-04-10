@@ -12,7 +12,7 @@ class ClockScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final widthClock = MediaQuery.of(context).size.width - 50;
+    final widthClock = MediaQuery.of(context).size.width - 100;
     return Scaffold(
       body: Center(
         child: Column(
