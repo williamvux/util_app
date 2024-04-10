@@ -19,19 +19,27 @@ class ClockScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               width: widthClock,
               height: widthClock,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  width: 10,
-                  color: Colors.amber,
-                ),
+              child: Stack(
+                children: [
+                  Container(
+                    width: widthClock,
+                    height: widthClock,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 10,
+                        color: Colors.amber,
+                      ),
+                    ),
+                  ),
+                  const Center(child: Text('Clock'))
+                ],
               ),
-              child: const Center(child: Text('Clock')),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 50),
             FloatingActionButton(
               onPressed: () {},
               child: const Text('Start'),
