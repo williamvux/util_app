@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:util/modules/screens/clock/index.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
+import 'package:util/modules/clock/index.dart';
 
 class BottomMenu extends StatelessWidget {
   static const String routeName = 'bottom_menu';
@@ -31,7 +33,10 @@ class _MenuPageState extends State<MenuPage> {
   // Widgets for each tab/screen
   final List<Widget> _widgetOptions = <Widget>[
     Container(),
-    const ClockScreen(),
+    BlocProvider(
+      create: (context) => ClockBloc(),
+      child: const ClockScreen(),
+    ),
     Container(),
   ];
 
@@ -51,8 +56,9 @@ class _MenuPageState extends State<MenuPage> {
         width: 70,
         height: 35,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.deepPurple.shade100),
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.deepPurple.shade100,
+        ),
         child: Icon(
           iconMenu,
         ),
