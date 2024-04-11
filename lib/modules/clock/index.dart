@@ -92,7 +92,10 @@ class _ClockScreenState extends State<ClockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final widthClock = MediaQuery.of(context).size.width - 150;
+    final widthClock = (widget.direction == Orientation.portrait
+            ? MediaQuery.of(context).size.width
+            : MediaQuery.of(context).size.height) -
+        150;
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       body: Center(
