@@ -17,7 +17,7 @@ class TimerWidget extends StatelessWidget {
             return GradientText(
               state.timer.timer,
               style: const TextStyle(
-                fontSize: 50,
+                fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
               gradient: LinearGradient(colors: [
@@ -29,7 +29,7 @@ class TimerWidget extends StatelessWidget {
             return const GradientText(
               '00:00:00',
               style: TextStyle(
-                fontSize: 50,
+                fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
               gradient: LinearGradient(colors: [

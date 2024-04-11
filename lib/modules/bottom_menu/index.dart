@@ -24,21 +24,22 @@ class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
 
   @override
-  _MenuPageState createState() => _MenuPageState();
+  State<MenuPage> createState() => _MenuPageState();
 }
 
 class _MenuPageState extends State<MenuPage> {
   int _selectedIndex = 0;
 
   // Widgets for each tab/screen
-  final List<Widget> _widgetOptions = <Widget>[
-    Container(),
-    BlocProvider(
-      create: (context) => ClockBloc(),
-      child: const ClockScreen(),
-    ),
-    Container(),
-  ];
+  List<Widget> _widgetOptions({Orientation direction = Orientation.portrait}) =>
+      <Widget>[
+        Container(),
+        BlocProvider(
+          create: (context) => ClockBloc(),
+          child: ClockScreen(direction: direction),
+        ),
+        Container(),
+      ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -68,23 +69,36 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.grey[300],
-        items: <BottomNavigationBarItem>[
-          _renderIcon(Icons.home),
-          _renderIcon(Icons.watch_later_rounded),
-          _renderIcon(Icons.calendar_month),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.indigo[900], // Color for selected item
-        onTap: _onItemTapped,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-      ),
-      drawerEnableOpenDragGesture: true,
-    );
+    return LayoutBuilder(builder: (
+      BuildContext context,
+      BoxConstraints constraints,
+    ) {
+      print([75, constraints.maxWidth, constraints.maxHeight]);
+      final Orientation direction = constraints.maxHeight > constraints.maxWidth
+          ? Orientation.portrait
+          : Orientation.landscape;
+      return Scaffold(
+        body: _widgetOptions(direction: direction).elementAt(_selectedIndex),
+        bottomNavigationBar: AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          height: direction == Orientation.portrait ? null : 0,
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.grey[300],
+            items: <BottomNavigationBarItem>[
+              _renderIcon(Icons.home),
+              _renderIcon(Icons.watch_later_rounded),
+              _renderIcon(Icons.calendar_month),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.indigo[900], // Color for selected item
+            onTap: _onItemTapped,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+          ),
+        ),
+        drawerEnableOpenDragGesture: true,
+      );
+    });
   }
 }

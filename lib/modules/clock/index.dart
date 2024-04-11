@@ -7,20 +7,22 @@ import 'package:util/models/pair.dart';
 import 'package:util/models/triple.dart';
 import 'package:util/modules/clock/Entities/timer.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
-import 'package:util/modules/clock/components/circle_clock.dart';
-import 'package:util/modules/clock/components/timer.dart';
+import 'package:util/modules/clock/widgets/clock.dart';
 import 'package:util/utils/index.dart';
 
 class ClockScreen extends StatefulWidget {
+  final Orientation direction;
   static const String routeName = 'clock';
   static Route route() {
     return MaterialPageRoute(
-      builder: (BuildContext context) => const ClockScreen(),
+      builder: (BuildContext context) => const ClockScreen(
+        direction: Orientation.portrait,
+      ),
       settings: const RouteSettings(name: routeName),
     );
   }
 
-  const ClockScreen({super.key});
+  const ClockScreen({super.key, required this.direction});
 
   @override
   State<ClockScreen> createState() => _ClockScreenState();
@@ -28,35 +30,57 @@ class ClockScreen extends StatefulWidget {
 
 class _ClockScreenState extends State<ClockScreen> {
   final ReceivePort port = ReceivePort();
+  int hour = 0;
+  int minute = 0;
+  int second = 0;
   Isolate? isolate;
   @override
   void initState() {
     super.initState();
+    _setUpPort();
+  }
+
+  void _setUpPort() {
     port.listen((pair) {
-      print([35, pair]);
-      context.read<ClockBloc>().add(SetupClock(
-          timer: TimerEntity(timer: pair.first, seconds: pair.second)));
+      context.read<ClockBloc>().add(
+            SetupClock(
+              timer: TimerEntity(
+                timer: pair.first,
+                seconds: pair.second,
+              ),
+            ),
+          );
     });
-    Isolate.spawn(
-      (Pair<SendPort, Triple<int, int, int>> pair) {
-        final timer = pair.second;
-        int seconds = timer.first * 60 * 60 + timer.second * 60 + timer.third;
+  }
+
+  void _setUpClock(Triple<int, int, int> triple) async {
+    isolate?.kill();
+    final int seconds =
+        triple.first * 60 * 60 + triple.second * 60 + triple.third;
+    SetupClock(
+      timer: TimerEntity(
+        timer: secondsToHms(seconds: seconds),
+        seconds: seconds,
+      ),
+    );
+    Isolate value = await Isolate.spawn(
+      (Pair<SendPort, int> pair) {
+        int seconds = pair.second;
         Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-          seconds -= 1;
           pair.first
               .send(Pair<String, int>(secondsToHms(seconds: seconds), seconds));
           if (seconds == 0) {
             timer.cancel();
           }
+          seconds -= 1;
         });
       },
-      Pair<SendPort, Triple<int, int, int>>(
+      Pair<SendPort, int>(
         port.sendPort,
-        const Triple(0, 1, 0),
+        seconds,
       ),
-    ).then((Isolate value) {
-      isolate = value;
-    });
+    );
+    isolate = value;
   }
 
   @override
@@ -68,26 +92,21 @@ class _ClockScreenState extends State<ClockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final widthClock = MediaQuery.of(context).size.width - 100;
+    final widthClock = MediaQuery.of(context).size.width - 150;
     return Scaffold(
+      backgroundColor: Colors.blue.shade50,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: widthClock,
-              height: widthClock,
-              child: Stack(
-                children: [
-                  CircleClock(widthClock: widthClock),
-                  const TimerWidget(),
-                ],
-              ),
-            ),
+            ClockWidget(widthClock: widthClock),
             const SizedBox(height: 50),
             FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () {
+                second = 10;
+                _setUpClock(Triple(hour, minute, second));
+              },
               extendedPadding: const EdgeInsets.symmetric(horizontal: 50),
               icon: const Icon(Icons.timer),
               label: const Text(
