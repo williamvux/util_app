@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:util/enum/index.dart';
-import 'package:util/models/model_box.dart';
 import 'package:util/modules/category/bloc/category/category_bloc.dart';
-import 'package:util/modules/category/entities/task.dart';
 import 'package:util/modules/category/widgets/box_task.dart';
+import 'package:util/modules/category/widgets/dialog_add_task.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const String routeName = 'category';
@@ -51,42 +49,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
                 ), //this right here
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 50,
-                    right: 50,
-                    top: 50,
-                    bottom: 30,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FractionallySizedBox(
-                        widthFactor: 0.9,
-                        child: TextField(
-                          controller: _taskCtrl,
-                          decoration: const InputDecoration(
-                            hintText: 'Task',
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          if (_taskCtrl.text.trim().isNotEmpty) {
-                            TaskModel model =
-                                TaskModel(title: _taskCtrl.text.trim());
-                            GetIt.I<IUBox>().box.add(model);
-                            Navigator.pop(context);
-                          }
-                        },
-                        icon: const Icon(Icons.edit, size: 20),
-                        label: const Text('Save'),
-                      ),
-                    ],
-                  ),
-                ),
+                child: DialogAddTask(taskCtrl: _taskCtrl),
               );
             },
           );
@@ -123,7 +86,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 onChanged: (bool? isChecked) {},
                               ),
                               title: Text(
-                                task.title,
+                                task.title + task.uuid,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
