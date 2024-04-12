@@ -4,3 +4,10 @@ enum Progress {
   loaded,
   error,
 }
+
+enum HiveBox {
+  iu,
+  inu,
+  niu,
+  ninu,
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:util/modules/category/index.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
 import 'package:util/modules/clock/index.dart';
 
@@ -33,7 +34,7 @@ class _MenuPageState extends State<MenuPage> {
   // Widgets for each tab/screen
   List<Widget> _widgetOptions({Orientation direction = Orientation.portrait}) =>
       <Widget>[
-        Container(),
+        const CategoryScreen(),
         BlocProvider(
           create: (context) => ClockBloc(),
           child: ClockScreen(direction: direction),
@@ -73,7 +74,6 @@ class _MenuPageState extends State<MenuPage> {
       BuildContext context,
       BoxConstraints constraints,
     ) {
-      print([75, constraints.maxWidth, constraints.maxHeight]);
       final Orientation direction = constraints.maxHeight > constraints.maxWidth
           ? Orientation.portrait
           : Orientation.landscape;
@@ -86,9 +86,9 @@ class _MenuPageState extends State<MenuPage> {
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.grey[300],
             items: <BottomNavigationBarItem>[
-              _renderIcon(Icons.home),
-              _renderIcon(Icons.watch_later_rounded),
-              _renderIcon(Icons.calendar_month),
+              _renderIcon(Icons.category_rounded),
+              _renderIcon(Icons.av_timer_rounded),
+              _renderIcon(Icons.task_alt),
             ],
             currentIndex: _selectedIndex,
             selectedItemColor: Colors.indigo[900], // Color for selected item

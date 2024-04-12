@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:util/enum/index.dart';
-import 'package:util/modules/clock/Entities/timer.dart';
+import 'package:util/modules/clock/entities/timer.dart';
 
 part 'clock_event.dart';
 part 'clock_state.dart';

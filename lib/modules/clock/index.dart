@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:util/models/pair.dart';
 import 'package:util/models/triple.dart';
-import 'package:util/modules/clock/Entities/timer.dart';
+import 'package:util/modules/clock/entities/timer.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
 import 'package:util/modules/clock/widgets/clock.dart';
 import 'package:util/utils/index.dart';
@@ -53,7 +53,7 @@ class _ClockScreenState extends State<ClockScreen> {
     });
   }
 
-  void _setUpClock(Triple<int, int, int> triple) async {
+  void _setUpClock(Triple<int, int, int> triple) {
     isolate?.kill();
     final int seconds =
         triple.first * 60 * 60 + triple.second * 60 + triple.third;
@@ -63,7 +63,7 @@ class _ClockScreenState extends State<ClockScreen> {
         seconds: seconds,
       ),
     );
-    Isolate value = await Isolate.spawn(
+    Isolate.spawn(
       (Pair<SendPort, int> pair) {
         int seconds = pair.second;
         Timer.periodic(const Duration(seconds: 1), (Timer timer) {
@@ -79,8 +79,9 @@ class _ClockScreenState extends State<ClockScreen> {
         port.sendPort,
         seconds,
       ),
-    );
-    isolate = value;
+    ).then((value) {
+      isolate = value;
+    });
   }
 
   @override

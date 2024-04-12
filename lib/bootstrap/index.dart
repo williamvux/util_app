@@ -16,5 +16,6 @@ class UtilApp extends StatelessWidget {
 }
 
 Widget bootstrap() {
+  WidgetsFlutterBinding.ensureInitialized();
   return const UtilApp();
 }
