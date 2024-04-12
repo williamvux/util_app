@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:util/modules/category/bloc/category/category_bloc.dart';
 import 'package:util/modules/category/index.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
 import 'package:util/modules/clock/index.dart';
@@ -34,7 +35,10 @@ class _MenuPageState extends State<MenuPage> {
   // Widgets for each tab/screen
   List<Widget> _widgetOptions({Orientation direction = Orientation.portrait}) =>
       <Widget>[
-        const CategoryScreen(),
+        BlocProvider(
+          create: (context) => CategoryBloc(),
+          child: const CategoryScreen(),
+        ),
         BlocProvider(
           create: (context) => ClockBloc(),
           child: ClockScreen(direction: direction),

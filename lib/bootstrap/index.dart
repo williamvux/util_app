@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:util/modules/splash/index.dart';
 import 'package:util/router/index.dart';
 
@@ -16,6 +17,7 @@ class UtilApp extends StatelessWidget {
 }
 
 Widget bootstrap() {
-  WidgetsFlutterBinding.ensureInitialized();
   return const UtilApp();
 }
+
+final getIt = GetIt.instance;

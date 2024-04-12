@@ -37,7 +37,7 @@ class BoxTask extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.white54,
+                color: Colors.white30,
               ),
             ),
           ),
@@ -47,7 +47,7 @@ class BoxTask extends StatelessWidget {
               height: heightContent,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(borderRadius),
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withOpacity(0.7),
               ),
             ),
           ),

@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:util/models/task.dart';
+import 'package:util/modules/category/entities/task.dart';
 
 sealed class BoxModel {
   final Box<TaskModel> box;

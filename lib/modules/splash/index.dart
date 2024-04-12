@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:util/enum/index.dart';
+import 'package:util/models/gen_id.dart';
 import 'package:util/models/model_box.dart';
-import 'package:util/models/task.dart';
+import 'package:util/modules/category/entities/task.dart';
 import 'package:util/modules/bottom_menu/index.dart';
 import 'package:uuid/uuid.dart';
 
@@ -29,18 +30,19 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.microtask(() {
       final appDocumentDirectory = Directory.current;
-      Hive.init(appDocumentDirectory.path);
+      Hive
+        ..init(appDocumentDirectory.path)
+        ..registerAdapter(TaskModelAdapter());
       Future.wait<Box<TaskModel>>([
         Hive.openBox(HiveBox.iu.name),
         Hive.openBox(HiveBox.inu.name),
         Hive.openBox(HiveBox.niu.name),
         Hive.openBox(HiveBox.ninu.name),
       ]).then((List<Box<TaskModel>> boxes) {
-        GetIt.I.registerSingleton<Uuid>(const Uuid());
-        GetIt.I.registerSingleton<IUBox>(IUBox(box: boxes[0]));
-        GetIt.I.registerSingleton<INUBox>(INUBox(box: boxes[1]));
-        GetIt.I.registerSingleton<NIUBox>(NIUBox(box: boxes[2]));
-        GetIt.I.registerSingleton<NINUBox>(NINUBox(box: boxes[3]));
+        GetIt.I.registerLazySingleton<IUBox>(() => IUBox(box: boxes[0]));
+        GetIt.I.registerLazySingleton<INUBox>(() => INUBox(box: boxes[1]));
+        GetIt.I.registerLazySingleton<NIUBox>(() => NIUBox(box: boxes[2]));
+        GetIt.I.registerLazySingleton<NINUBox>(() => NINUBox(box: boxes[3]));
         Navigator.of(context).pushNamed(BottomMenu.routeName);
       });
     });
