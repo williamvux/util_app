@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:util/enum/index.dart';
+import 'package:util/models/constant.dart';
+import 'package:util/models/model_box.dart';
 import 'package:util/modules/category/bloc/category/category_bloc.dart';
 import 'package:util/modules/category/widgets/box_task.dart';
 import 'package:util/modules/category/widgets/dialog_add_task.dart';
@@ -26,6 +29,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void initState() {
     super.initState();
     context.read<CategoryBloc>().add(const LoadingCategory());
+  }
+
+  void _toggleCheckedItem({
+    required CategoryEvent category,
+  }) {
+    context.read<CategoryBloc>().add(category);
   }
 
   @override
@@ -77,19 +86,37 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           itemBuilder: (BuildContext context, int index) {
                             final task = state.tasks[index];
                             return ListTile(
+                              key: ValueKey(task.uuid),
                               dense: true,
                               leading: Checkbox(
-                                checkColor: Colors.white,
-                                hoverColor: Colors.white,
-                                activeColor: Colors.white,
+                                // checkColor: Colors.white,
+                                // hoverColor: Colors.white,
+                                activeColor: Colors.red.shade400,
                                 value: task.isChecked,
-                                onChanged: (bool? isChecked) {},
+                                onChanged: (bool? isChecked) {
+                                  final model = task.copyWith(
+                                    isChecked: isChecked,
+                                  );
+                                  _toggleCheckedItem(
+                                    category: ToggleItem(
+                                      model: model,
+                                      index: index,
+                                    ),
+                                  );
+                                },
                               ),
                               title: Text(
-                                task.title + task.uuid,
+                                task.title,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
+                                ),
+                              ),
+                              subtitle: Text(
+                                task.datetime ?? Constant.now(),
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.grey,
                                 ),
                               ),
                             );

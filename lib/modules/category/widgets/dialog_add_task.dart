@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:util/models/constant.dart';
 import 'package:util/models/model_box.dart';
 import 'package:util/modules/category/entities/task.dart';
 
@@ -37,7 +38,12 @@ class DialogAddTask extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: () {
               if (_taskCtrl.text.trim().isNotEmpty) {
-                TaskModel model = TaskModel(title: _taskCtrl.text.trim());
+                TaskModel model = TaskModel(
+                  uuid: Constant.uuid(),
+                  title: _taskCtrl.text.trim(),
+                  isChecked: false,
+                  datetime: Constant.now(),
+                );
                 GetIt.I<IUBox>().box.add(model);
                 Navigator.pop(context);
               }

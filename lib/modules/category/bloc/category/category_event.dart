@@ -21,3 +21,13 @@ final class AddCategory extends CategoryEvent {
   @override
   List<Object> get props => [model];
 }
+
+final class ToggleItem extends CategoryEvent {
+  final TaskModel model;
+  final int index;
+
+  const ToggleItem({required this.model, required this.index});
+
+  @override
+  List<Object> get props => [model, index];
+}
