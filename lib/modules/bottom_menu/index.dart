@@ -36,7 +36,7 @@ class _MenuPageState extends State<MenuPage> {
   List<Widget> _widgetOptions({Orientation direction = Orientation.portrait}) =>
       <Widget>[
         BlocProvider(
-          create: (context) => CategoryBloc(),
+          create: (context) => IUTaskBloc(),
           child: const CategoryScreen(),
         ),
         BlocProvider(

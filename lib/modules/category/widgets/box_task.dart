@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:util/models/model_box.dart';
+import 'package:util/modules/category/enum/index.dart';
 
 class BoxTask extends StatelessWidget {
   final double widthEachBox;
@@ -8,6 +9,9 @@ class BoxTask extends StatelessWidget {
   final String placeholder;
   final Color boxColor;
   final Widget child;
+  final TypeTask typeTask;
+  final void Function({required TypeTask typeTask, required Color color})
+      openDialog;
   final void Function() deleteAllTasks;
 
   const BoxTask({
@@ -18,6 +22,8 @@ class BoxTask extends StatelessWidget {
     required this.boxColor,
     required this.child,
     required this.deleteAllTasks,
+    required this.typeTask,
+    required this.openDialog,
   });
 
   @override
@@ -68,14 +74,32 @@ class BoxTask extends StatelessWidget {
           Positioned(
             bottom: 10,
             right: 10,
-            child: IconButton(
-              onPressed: () {
-                if (GetIt.I<IUBox>().box.isNotEmpty) {
-                  GetIt.I<IUBox>().box.clear();
-                  deleteAllTasks();
-                }
-              },
-              icon: const Icon(Icons.delete_forever),
+            child: Column(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    openDialog(typeTask: typeTask, color: boxColor);
+                  },
+                  icon: const Icon(
+                    Icons.add_circle_outline,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    if (GetIt.I<IUBox>().box.isNotEmpty) {
+                      GetIt.I<IUBox>().box.clear();
+                      deleteAllTasks();
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.delete_forever,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

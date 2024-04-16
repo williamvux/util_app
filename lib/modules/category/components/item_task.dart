@@ -3,11 +3,12 @@ import 'package:util/extention/string.dart';
 import 'package:util/models/constant.dart';
 import 'package:util/modules/category/bloc/category/category_bloc.dart';
 import 'package:util/modules/category/entities/task.dart';
+import 'package:util/modules/category/enum/index.dart';
 
 class ItemTask extends StatelessWidget {
   final int index;
   final TaskModel task;
-  final void Function({required CategoryEvent category}) toggleCheckedItem;
+  final void Function({required IUTaskEvent category}) toggleCheckedItem;
   const ItemTask({
     super.key,
     required this.index,
@@ -27,7 +28,12 @@ class ItemTask extends StatelessWidget {
           final model = task.copyWith(
             isChecked: isChecked,
           );
-          toggleCheckedItem(category: ToggleItem(model: model, index: index));
+          toggleCheckedItem(
+              category: ToggleItem(
+            model: model,
+            index: index,
+            type: TypeTask.I_U,
+          ));
         },
       ),
       title: Text(

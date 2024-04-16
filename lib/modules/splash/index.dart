@@ -41,6 +41,8 @@ class _SplashScreenState extends State<SplashScreen> {
         GetIt.I.registerLazySingleton<INUBox>(() => INUBox(box: boxes[1]));
         GetIt.I.registerLazySingleton<NIUBox>(() => NIUBox(box: boxes[2]));
         GetIt.I.registerLazySingleton<NINUBox>(() => NINUBox(box: boxes[3]));
+        return Future.delayed(const Duration(seconds: 1));
+      }).then((_) {
         Navigator.of(context).pushNamed(BottomMenu.routeName);
       });
     });
@@ -55,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
             width: 100,
             height: 1000,
             child: Image.network(
-                'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/09/instagram-image-size.jpg'),
+                'https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_1080,q_100,w_1080/v1/gcs/platform-data-dsc/events/Flutter%20Bird.png'),
           ),
         ),
       ),

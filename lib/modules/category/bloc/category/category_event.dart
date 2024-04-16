@@ -1,40 +1,49 @@
 part of 'category_bloc.dart';
 
-sealed class CategoryEvent extends Equatable {
-  const CategoryEvent();
+sealed class IUTaskEvent extends Equatable {
+  const IUTaskEvent();
 
   @override
   List<Object> get props => [];
 }
 
-final class LoadingCategory extends CategoryEvent {
-  const LoadingCategory();
+final class LoadingCategory extends IUTaskEvent {
+  final TypeTask type;
+  const LoadingCategory({required this.type});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [type];
 }
 
-final class AddCategory extends CategoryEvent {
+final class AddCategory extends IUTaskEvent {
   final TaskModel model;
-  const AddCategory({required this.model});
+  final TypeTask type;
+  const AddCategory({required this.model, required this.type});
 
   @override
-  List<Object> get props => [model];
+  List<Object> get props => [model, type];
 }
 
-final class ToggleItem extends CategoryEvent {
+final class ToggleItem extends IUTaskEvent {
   final TaskModel model;
   final int index;
+  final TypeTask type;
 
-  const ToggleItem({required this.model, required this.index});
+  const ToggleItem({
+    required this.model,
+    required this.index,
+    required this.type,
+  });
 
   @override
-  List<Object> get props => [model, index];
+  List<Object> get props => [model, index, type];
 }
 
-final class DeleteAll extends CategoryEvent {
-  const DeleteAll();
+final class DeleteAll extends IUTaskEvent {
+  final TypeTask type;
+
+  const DeleteAll({required this.type});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [type];
 }

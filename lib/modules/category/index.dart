@@ -7,6 +7,7 @@ import 'package:util/models/model_box.dart';
 import 'package:util/modules/category/bloc/category/category_bloc.dart';
 import 'package:util/modules/category/components/item_task.dart';
 import 'package:util/modules/category/entities/task.dart';
+import 'package:util/modules/category/enum/index.dart';
 import 'package:util/modules/category/widgets/box_task.dart';
 import 'package:util/modules/category/widgets/dialog_add_task.dart';
 
@@ -30,14 +31,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<CategoryBloc>().add(const LoadingCategory());
+    context.read<IUTaskBloc>().add(
+          const LoadingCategory(type: TypeTask.I_U),
+        );
   }
 
-  void _toggleCheckedItem({required CategoryEvent category}) {
-    context.read<CategoryBloc>().add(category);
+  void _toggleCheckedItem({required IUTaskEvent category}) {
+    context.read<IUTaskBloc>().add(category);
   }
 
-  void onAddTask() {
+  void _onAddTask<A extends BoxModel>({required TypeTask typeTask}) {
     if (_taskCtrl.text.trim().isNotEmpty) {
       TaskModel model = TaskModel(
         uuid: Constant.uuid(),
@@ -45,14 +48,37 @@ class _CategoryScreenState extends State<CategoryScreen> {
         isChecked: false,
         datetime: Constant.now(),
       );
-      GetIt.I<IUBox>().box.add(model);
-      context.read<CategoryBloc>().add(const LoadingCategory());
+      GetIt.I<A>().box.add(model);
+      context.read<IUTaskBloc>().add(
+            const LoadingCategory(
+              type: TypeTask.I_U,
+            ),
+          );
       Navigator.pop(context);
     }
   }
 
   void _deleteAllTasks() {
-    context.read<CategoryBloc>().add(const DeleteAll());
+    context.read<IUTaskBloc>().add(const DeleteAll(type: TypeTask.I_U));
+  }
+
+  void _openDialogAddTask({required TypeTask typeTask, required Color color}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ), //this right here
+          child: DialogAddTask(
+            taskCtrl: _taskCtrl,
+            typeTask: typeTask,
+            onAddTask: _onAddTask,
+            color: color,
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -65,123 +91,112 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     final widthEachBox = (MediaQuery.of(context).size.width - 15) / 2;
     final heightEachBox = (MediaQuery.of(context).size.height - 85) / 2;
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.small(
-        enableFeedback: true,
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ), //this right here
-                child: DialogAddTask(taskCtrl: _taskCtrl, onAddTask: onAddTask),
-              );
-            },
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                BoxTask(
-                  widthEachBox: widthEachBox,
-                  heightEachBox: heightEachBox,
-                  placeholder: 'Important\nUrgent',
-                  boxColor: Colors.red.shade200,
-                  deleteAllTasks: _deleteAllTasks,
-                  child: BlocBuilder<CategoryBloc, CategoryState>(
-                    builder: (context, state) {
-                      if (state.status == Progress.loaded) {
-                        return ListView.builder(
-                          itemCount: state.tasks.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final task = state.tasks[index];
-                            return ItemTask(
-                              index: index,
-                              task: task,
-                              toggleCheckedItem: _toggleCheckedItem,
-                            );
-                          },
-                        );
-                      }
-                      return const Center(
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3,
-                            color: Colors.white,
-                          ),
-                        ),
+    return SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              BoxTask(
+                widthEachBox: widthEachBox,
+                heightEachBox: heightEachBox,
+                placeholder: 'Important\nUrgent',
+                boxColor: Colors.red.shade200,
+                deleteAllTasks: _deleteAllTasks,
+                typeTask: TypeTask.I_U,
+                openDialog: _openDialogAddTask,
+                child: BlocBuilder<IUTaskBloc, IUTaskState>(
+                  builder: (context, state) {
+                    if (state.status == Progress.loaded) {
+                      return ListView.builder(
+                        itemCount: state.tasks.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final task = state.tasks[index];
+                          return ItemTask(
+                            index: index,
+                            task: task,
+                            toggleCheckedItem: _toggleCheckedItem,
+                          );
+                        },
                       );
-                    },
-                  ),
-                ),
-                BoxTask(
-                  widthEachBox: widthEachBox,
-                  heightEachBox: heightEachBox,
-                  placeholder: 'Important\nNot Urgent',
-                  boxColor: Colors.green.shade200,
-                  deleteAllTasks: _deleteAllTasks,
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'data',
-                        style: TextStyle(color: Colors.white),
+                    }
+                    return const Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          color: Colors.white,
+                        ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                BoxTask(
-                  placeholder: 'Not Important\nUrgent',
-                  widthEachBox: widthEachBox,
-                  heightEachBox: heightEachBox,
-                  boxColor: Colors.blue.shade200,
-                  deleteAllTasks: _deleteAllTasks,
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'data',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
+              ),
+              BoxTask(
+                widthEachBox: widthEachBox,
+                heightEachBox: heightEachBox,
+                placeholder: 'Important\nNot Urgent',
+                boxColor: Colors.green.shade200,
+                typeTask: TypeTask.I_NU,
+                openDialog: _openDialogAddTask,
+                deleteAllTasks: _deleteAllTasks,
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'data',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
-                BoxTask(
-                  widthEachBox: widthEachBox,
-                  heightEachBox: heightEachBox,
-                  placeholder: 'Not Important\nNot Urgent',
-                  boxColor: Colors.amber.shade200,
-                  deleteAllTasks: _deleteAllTasks,
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'data',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              BoxTask(
+                placeholder: 'Not Important\nUrgent',
+                widthEachBox: widthEachBox,
+                heightEachBox: heightEachBox,
+                boxColor: Colors.blue.shade200,
+                typeTask: TypeTask.NI_U,
+                openDialog: _openDialogAddTask,
+                deleteAllTasks: _deleteAllTasks,
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'data',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+              BoxTask(
+                widthEachBox: widthEachBox,
+                heightEachBox: heightEachBox,
+                placeholder: 'Not Important\nNot Urgent',
+                boxColor: Colors.amber.shade200,
+                typeTask: TypeTask.NI_NU,
+                openDialog: _openDialogAddTask,
+                deleteAllTasks: _deleteAllTasks,
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'data',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
