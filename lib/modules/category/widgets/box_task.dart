@@ -51,7 +51,7 @@ class BoxTask extends StatelessWidget {
               height: heightContent,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(borderRadius),
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black26,
               ),
             ),
           ),

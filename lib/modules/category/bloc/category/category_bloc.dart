@@ -18,7 +18,9 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   void _handleLoadingTasks(
     LoadingCategory event,
     Emitter<CategoryState> emit,
-  ) {
+  ) async {
+    emit(const CategoryLoading());
+    await Future.delayed(const Duration(seconds: 5));
     emit(CategoryLoaded(tasks: GetIt.I<IUBox>().box.values.toList()));
   }
 

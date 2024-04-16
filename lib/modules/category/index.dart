@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:util/enum/index.dart';
-import 'package:util/extention/string.dart';
 import 'package:util/models/constant.dart';
 import 'package:util/models/model_box.dart';
 import 'package:util/modules/category/bloc/category/category_bloc.dart';
@@ -96,7 +95,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   widthEachBox: widthEachBox,
                   heightEachBox: heightEachBox,
                   placeholder: 'Important\nUrgent',
-                  boxColor: Colors.red.shade400,
+                  boxColor: Colors.red.shade200,
                   deleteAllTasks: _deleteAllTasks,
                   child: BlocBuilder<CategoryBloc, CategoryState>(
                     builder: (context, state) {
@@ -113,10 +112,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           },
                         );
                       }
-                      return const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 1),
+                      return const Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
+                            color: Colors.white,
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -125,7 +129,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   widthEachBox: widthEachBox,
                   heightEachBox: heightEachBox,
                   placeholder: 'Important\nNot Urgent',
-                  boxColor: Colors.green.shade300,
+                  boxColor: Colors.green.shade200,
                   deleteAllTasks: _deleteAllTasks,
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +166,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   widthEachBox: widthEachBox,
                   heightEachBox: heightEachBox,
                   placeholder: 'Not Important\nNot Urgent',
-                  boxColor: Colors.amber.shade100,
+                  boxColor: Colors.amber.shade200,
                   deleteAllTasks: _deleteAllTasks,
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
