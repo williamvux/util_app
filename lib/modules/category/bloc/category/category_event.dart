@@ -31,3 +31,10 @@ final class ToggleItem extends CategoryEvent {
   @override
   List<Object> get props => [model, index];
 }
+
+final class DeleteAll extends CategoryEvent {
+  const DeleteAll();
+
+  @override
+  List<Object> get props => [];
+}

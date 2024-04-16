@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:util/enum/index.dart';
-import 'package:util/models/gen_id.dart';
 import 'package:util/models/model_box.dart';
 import 'package:util/modules/category/entities/task.dart';
 import 'package:util/modules/bottom_menu/index.dart';
-import 'package:uuid/uuid.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

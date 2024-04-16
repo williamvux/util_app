@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:util/enum/index.dart';
 import 'package:util/extention/string.dart';
 import 'package:util/models/constant.dart';
+import 'package:util/models/model_box.dart';
 import 'package:util/modules/category/bloc/category/category_bloc.dart';
+import 'package:util/modules/category/components/item_task.dart';
+import 'package:util/modules/category/entities/task.dart';
 import 'package:util/modules/category/widgets/box_task.dart';
 import 'package:util/modules/category/widgets/dialog_add_task.dart';
 
@@ -30,10 +34,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
     context.read<CategoryBloc>().add(const LoadingCategory());
   }
 
-  void _toggleCheckedItem({
-    required CategoryEvent category,
-  }) {
+  void _toggleCheckedItem({required CategoryEvent category}) {
     context.read<CategoryBloc>().add(category);
+  }
+
+  void onAddTask() {
+    if (_taskCtrl.text.trim().isNotEmpty) {
+      TaskModel model = TaskModel(
+        uuid: Constant.uuid(),
+        title: _taskCtrl.text.trim(),
+        isChecked: false,
+        datetime: Constant.now(),
+      );
+      GetIt.I<IUBox>().box.add(model);
+      context.read<CategoryBloc>().add(const LoadingCategory());
+      Navigator.pop(context);
+    }
+  }
+
+  void _deleteAllTasks() {
+    context.read<CategoryBloc>().add(const DeleteAll());
   }
 
   @override
@@ -57,7 +77,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
                 ), //this right here
-                child: DialogAddTask(taskCtrl: _taskCtrl),
+                child: DialogAddTask(taskCtrl: _taskCtrl, onAddTask: onAddTask),
               );
             },
           );
@@ -77,6 +97,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   heightEachBox: heightEachBox,
                   placeholder: 'Important\nUrgent',
                   boxColor: Colors.red.shade400,
+                  deleteAllTasks: _deleteAllTasks,
                   child: BlocBuilder<CategoryBloc, CategoryState>(
                     builder: (context, state) {
                       if (state.status == Progress.loaded) {
@@ -84,47 +105,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           itemCount: state.tasks.length,
                           itemBuilder: (BuildContext context, int index) {
                             final task = state.tasks[index];
-                            return ListTile(
-                              key: ValueKey(task.uuid),
-                              dense: true,
-                              leading: Checkbox(
-                                activeColor: Colors.red.shade400,
-                                value: task.isChecked,
-                                onChanged: (bool? isChecked) {
-                                  final model = task.copyWith(
-                                    isChecked: isChecked,
-                                  );
-                                  _toggleCheckedItem(
-                                    category: ToggleItem(
-                                      model: model,
-                                      index: index,
-                                    ),
-                                  );
-                                },
-                              ),
-                              title: Text(
-                                task.title.capitalize(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  decoration: task.isChecked
-                                      ? TextDecoration.lineThrough
-                                      : null,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.white,
-                                ),
-                              ),
-                              subtitle: Text(
-                                task.datetime ?? Constant.now(),
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.grey,
-                                  decoration: task.isChecked
-                                      ? TextDecoration.lineThrough
-                                      : null,
-                                  decorationColor: Colors.white,
-                                ),
-                              ),
+                            return ItemTask(
+                              index: index,
+                              task: task,
+                              toggleCheckedItem: _toggleCheckedItem,
                             );
                           },
                         );
@@ -142,6 +126,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   heightEachBox: heightEachBox,
                   placeholder: 'Important\nNot Urgent',
                   boxColor: Colors.green.shade300,
+                  deleteAllTasks: _deleteAllTasks,
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -162,6 +147,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   widthEachBox: widthEachBox,
                   heightEachBox: heightEachBox,
                   boxColor: Colors.blue.shade200,
+                  deleteAllTasks: _deleteAllTasks,
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -177,6 +163,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   heightEachBox: heightEachBox,
                   placeholder: 'Not Important\nNot Urgent',
                   boxColor: Colors.amber.shade100,
+                  deleteAllTasks: _deleteAllTasks,
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

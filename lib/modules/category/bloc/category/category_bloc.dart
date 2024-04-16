@@ -12,23 +12,29 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   CategoryBloc() : super(const CategoryInitial()) {
     on<LoadingCategory>(_handleLoadingTasks);
     on<ToggleItem>(_toggleItemTask);
+    on<DeleteAll>(_handleDeleteAll);
   }
 
   void _handleLoadingTasks(
     LoadingCategory event,
     Emitter<CategoryState> emit,
   ) {
-    final listTasks = GetIt.I<IUBox>().box.values.toList();
-    emit(CategoryLoaded(tasks: listTasks));
+    emit(CategoryLoaded(tasks: GetIt.I<IUBox>().box.values.toList()));
+  }
+
+  void _handleDeleteAll(
+    DeleteAll event,
+    Emitter<CategoryState> emit,
+  ) {
+    emit(const CategoryLoaded(tasks: []));
   }
 
   void _toggleItemTask(
     ToggleItem event,
     Emitter<CategoryState> emit,
   ) {
-    print([29, event.model.title]);
     GetIt.I<IUBox>().box.putAt(event.index, event.model);
-    final listTasks = GetIt.I<IUBox>().box.values.toList();
-    emit(CategoryLoaded(tasks: listTasks));
+
+    emit(CategoryLoaded(tasks: GetIt.I<IUBox>().box.values.toList()));
   }
 }

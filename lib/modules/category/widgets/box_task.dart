@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:util/models/model_box.dart';
 
 class BoxTask extends StatelessWidget {
   final double widthEachBox;
@@ -6,6 +8,7 @@ class BoxTask extends StatelessWidget {
   final String placeholder;
   final Color boxColor;
   final Widget child;
+  final void Function() deleteAllTasks;
 
   const BoxTask({
     super.key,
@@ -14,6 +17,7 @@ class BoxTask extends StatelessWidget {
     required this.placeholder,
     required this.boxColor,
     required this.child,
+    required this.deleteAllTasks,
   });
 
   @override
@@ -59,6 +63,19 @@ class BoxTask extends StatelessWidget {
                 padding: const EdgeInsets.all(5),
                 child: child,
               ),
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: IconButton(
+              onPressed: () {
+                if (GetIt.I<IUBox>().box.isNotEmpty) {
+                  GetIt.I<IUBox>().box.clear();
+                  deleteAllTasks();
+                }
+              },
+              icon: const Icon(Icons.delete_forever),
             ),
           ),
         ],

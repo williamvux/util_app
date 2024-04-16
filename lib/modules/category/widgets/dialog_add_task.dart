@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:util/models/constant.dart';
-import 'package:util/models/model_box.dart';
-import 'package:util/modules/category/entities/task.dart';
 
 class DialogAddTask extends StatelessWidget {
+  final void Function() onAddTask;
+  final TextEditingController _taskCtrl;
   const DialogAddTask({
     super.key,
     required TextEditingController taskCtrl,
+    required this.onAddTask,
   }) : _taskCtrl = taskCtrl;
-
-  final TextEditingController _taskCtrl;
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +33,7 @@ class DialogAddTask extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           ElevatedButton.icon(
-            onPressed: () {
-              if (_taskCtrl.text.trim().isNotEmpty) {
-                TaskModel model = TaskModel(
-                  uuid: Constant.uuid(),
-                  title: _taskCtrl.text.trim(),
-                  isChecked: false,
-                  datetime: Constant.now(),
-                );
-                GetIt.I<IUBox>().box.add(model);
-                Navigator.pop(context);
-              }
-            },
+            onPressed: onAddTask,
             icon: const Icon(Icons.edit, size: 20),
             label: const Text('Save'),
           ),
