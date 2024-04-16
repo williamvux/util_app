@@ -1,7 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:util/models/constant.dart';
-import 'package:uuid/uuid.dart';
 part 'task.g.dart';
 
 @HiveType(typeId: 0)

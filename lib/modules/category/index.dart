@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:util/enum/index.dart';
+import 'package:util/extention/string.dart';
 import 'package:util/models/constant.dart';
-import 'package:util/models/model_box.dart';
 import 'package:util/modules/category/bloc/category/category_bloc.dart';
 import 'package:util/modules/category/widgets/box_task.dart';
 import 'package:util/modules/category/widgets/dialog_add_task.dart';
@@ -89,8 +88,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               key: ValueKey(task.uuid),
                               dense: true,
                               leading: Checkbox(
-                                // checkColor: Colors.white,
-                                // hoverColor: Colors.white,
                                 activeColor: Colors.red.shade400,
                                 value: task.isChecked,
                                 onChanged: (bool? isChecked) {
@@ -106,17 +103,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 },
                               ),
                               title: Text(
-                                task.title,
-                                style: const TextStyle(
+                                task.title.capitalize(),
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
+                                  decoration: task.isChecked
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                  decorationThickness: 2,
+                                  decorationColor: Colors.white,
                                 ),
                               ),
                               subtitle: Text(
                                 task.datetime ?? Constant.now(),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 10,
                                   color: Colors.grey,
+                                  decoration: task.isChecked
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                  decorationColor: Colors.white,
                                 ),
                               ),
                             );
