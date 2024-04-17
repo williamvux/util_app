@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:util/enum/index.dart';
 import 'package:util/models/constant.dart';
-import 'package:util/models/model_box.dart';
-import 'package:util/modules/category/bloc/category/category_bloc.dart';
-import 'package:util/modules/category/components/item_task.dart';
+import 'package:util/modules/category/bloc/inutask/inutask_bloc.dart';
+import 'package:util/modules/category/bloc/iutask/iutask_bloc.dart';
+import 'package:util/modules/category/bloc/ninutask/ninutask_bloc.dart';
+import 'package:util/modules/category/bloc/niutask/niutask_bloc.dart';
 import 'package:util/modules/category/entities/task.dart';
 import 'package:util/modules/category/enum/index.dart';
 import 'package:util/modules/category/widgets/box_task.dart';
 import 'package:util/modules/category/widgets/dialog_add_task.dart';
 
 class CategoryScreen extends StatefulWidget {
-  static const String routeName = 'category';
+  static const String routeName = 'iutask';
   static Route route() {
     return MaterialPageRoute(
       builder: (BuildContext context) => const CategoryScreen(),
@@ -31,16 +30,68 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<IUTaskBloc>().add(
-          const LoadingCategory(type: TypeTask.I_U),
-        );
+    Future.delayed(const Duration(seconds: 1)).then((_) {
+      context.read<IUTaskBloc>().add(const LoadingIUTasks());
+      context.read<INUTaskBloc>().add(const LoadingINUTasks());
+      context.read<NIUTaskBloc>().add(const LoadingNIUTasks());
+      context.read<NINUTaskBloc>().add(const LoadingNINUTasks());
+    });
   }
 
-  void _toggleCheckedItem({required IUTaskEvent category}) {
-    context.read<IUTaskBloc>().add(category);
+  void _toggleCheckedItem({
+    required TaskModel task,
+    required TypeTask type,
+    required int index,
+    required List<TaskModel> tasks,
+  }) {
+    switch (type) {
+      case TypeTask.I_U:
+        {
+          final event = ToggleIUTask(
+            model: task,
+            index: index,
+            tasks: tasks,
+          );
+          context.read<IUTaskBloc>().add(event);
+        }
+        break;
+      case TypeTask.I_NU:
+        {
+          final event = ToggleINUTask(
+            model: task,
+            index: index,
+            tasks: tasks,
+          );
+          context.read<INUTaskBloc>().add(event);
+        }
+        break;
+      case TypeTask.NI_U:
+        {
+          final event = ToggleNIUTask(
+            model: task,
+            index: index,
+            tasks: tasks,
+          );
+          context.read<NIUTaskBloc>().add(event);
+        }
+        break;
+      case TypeTask.NI_NU:
+        {
+          final event = ToggleNINUTask(
+            model: task,
+            index: index,
+            tasks: tasks,
+          );
+          context.read<NINUTaskBloc>().add(event);
+        }
+        break;
+    }
   }
 
-  void _onAddTask<A extends BoxModel>({required TypeTask typeTask}) {
+  void _onAddTask({
+    required TypeTask typeTask,
+    required List<TaskModel> tasks,
+  }) {
     if (_taskCtrl.text.trim().isNotEmpty) {
       TaskModel model = TaskModel(
         uuid: Constant.uuid(),
@@ -48,33 +99,102 @@ class _CategoryScreenState extends State<CategoryScreen> {
         isChecked: false,
         datetime: Constant.now(),
       );
-      GetIt.I<A>().box.add(model);
-      context.read<IUTaskBloc>().add(
-            const LoadingCategory(
-              type: TypeTask.I_U,
-            ),
-          );
+      switch (typeTask) {
+        case TypeTask.I_U:
+          {
+            context
+                .read<IUTaskBloc>()
+                .add(AddIUTask(model: model, tasks: tasks));
+          }
+          break;
+        case TypeTask.I_NU:
+          {
+            context
+                .read<INUTaskBloc>()
+                .add(AddINUTask(model: model, tasks: tasks));
+          }
+          break;
+        case TypeTask.NI_U:
+          {
+            context
+                .read<NIUTaskBloc>()
+                .add(AddNIUTask(model: model, tasks: tasks));
+          }
+          break;
+        case TypeTask.NI_NU:
+          {
+            context
+                .read<NINUTaskBloc>()
+                .add(AddNINUTask(model: model, tasks: tasks));
+          }
+          break;
+      }
       Navigator.pop(context);
     }
   }
 
-  void _deleteAllTasks() {
-    context.read<IUTaskBloc>().add(const DeleteAll(type: TypeTask.I_U));
+  void _deleteAllTasks({required TypeTask typeTask}) {
+    switch (typeTask) {
+      case TypeTask.I_U:
+        context.read<IUTaskBloc>().add(const DeleteAllIUTasks());
+        break;
+      case TypeTask.I_NU:
+        context.read<INUTaskBloc>().add(const DeleteAllINUTasks());
+        break;
+      case TypeTask.NI_U:
+        context.read<NIUTaskBloc>().add(const DeleteAllNIUTasks());
+        break;
+      case TypeTask.NI_NU:
+        context.read<NINUTaskBloc>().add(const DeleteAllNINUTasks());
+        break;
+    }
   }
 
-  void _openDialogAddTask({required TypeTask typeTask, required Color color}) {
+  void _deleteTask({
+    required TypeTask type,
+    required int index,
+    required List<TaskModel> tasks,
+  }) {
+    switch (type) {
+      case TypeTask.I_U:
+        final event = DeleteIUTask(index: index, tasks: tasks);
+        context.read<IUTaskBloc>().add(event);
+        break;
+      case TypeTask.I_NU:
+        final event = DeleteINUTask(index: index, tasks: tasks);
+        context.read<INUTaskBloc>().add(event);
+        break;
+      case TypeTask.NI_U:
+        final event = DeleteNIUTask(index: index, tasks: tasks);
+        context.read<NIUTaskBloc>().add(event);
+        break;
+      case TypeTask.NI_NU:
+        final event = DeleteNINUTask(index: index, tasks: tasks);
+        context.read<NINUTaskBloc>().add(event);
+        break;
+    }
+  }
+
+  void _openDialogAddTask({
+    required TypeTask typeTask,
+    required Color color,
+    required List<TaskModel> tasks,
+  }) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final boxRadius = BorderRadius.circular(20.0);
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: boxRadius,
           ), //this right here
           child: DialogAddTask(
             taskCtrl: _taskCtrl,
             typeTask: typeTask,
             onAddTask: _onAddTask,
             color: color,
+            boxRadius: boxRadius,
+            tasks: tasks,
           ),
         );
       },
@@ -99,7 +219,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BoxTask(
+              BoxTask<IUTaskBloc>(
                 widthEachBox: widthEachBox,
                 heightEachBox: heightEachBox,
                 placeholder: 'Important\nUrgent',
@@ -107,35 +227,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 deleteAllTasks: _deleteAllTasks,
                 typeTask: TypeTask.I_U,
                 openDialog: _openDialogAddTask,
-                child: BlocBuilder<IUTaskBloc, IUTaskState>(
-                  builder: (context, state) {
-                    if (state.status == Progress.loaded) {
-                      return ListView.builder(
-                        itemCount: state.tasks.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final task = state.tasks[index];
-                          return ItemTask(
-                            index: index,
-                            task: task,
-                            toggleCheckedItem: _toggleCheckedItem,
-                          );
-                        },
-                      );
-                    }
-                    return const Center(
-                      child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 3,
-                          color: Colors.white,
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                toggleCheckedItem: _toggleCheckedItem,
+                deleteTask: _deleteTask,
               ),
-              BoxTask(
+              BoxTask<INUTaskBloc>(
                 widthEachBox: widthEachBox,
                 heightEachBox: heightEachBox,
                 placeholder: 'Important\nNot Urgent',
@@ -143,22 +238,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 typeTask: TypeTask.I_NU,
                 openDialog: _openDialogAddTask,
                 deleteAllTasks: _deleteAllTasks,
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'data',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
+                toggleCheckedItem: _toggleCheckedItem,
+                deleteTask: _deleteTask,
               ),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              BoxTask(
+              BoxTask<NIUTaskBloc>(
                 placeholder: 'Not Important\nUrgent',
                 widthEachBox: widthEachBox,
                 heightEachBox: heightEachBox,
@@ -166,17 +254,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 typeTask: TypeTask.NI_U,
                 openDialog: _openDialogAddTask,
                 deleteAllTasks: _deleteAllTasks,
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'data',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
+                toggleCheckedItem: _toggleCheckedItem,
+                deleteTask: _deleteTask,
               ),
-              BoxTask(
+              BoxTask<NINUTaskBloc>(
                 widthEachBox: widthEachBox,
                 heightEachBox: heightEachBox,
                 placeholder: 'Not Important\nNot Urgent',
@@ -184,15 +265,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 typeTask: TypeTask.NI_NU,
                 openDialog: _openDialogAddTask,
                 deleteAllTasks: _deleteAllTasks,
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'data',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
+                toggleCheckedItem: _toggleCheckedItem,
+                deleteTask: _deleteTask,
               ),
             ],
           ),

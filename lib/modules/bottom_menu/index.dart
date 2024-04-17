@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:util/modules/category/bloc/category/category_bloc.dart';
+import 'package:util/modules/category/bloc/inutask/inutask_bloc.dart';
+import 'package:util/modules/category/bloc/iutask/iutask_bloc.dart';
+import 'package:util/modules/category/bloc/ninutask/ninutask_bloc.dart';
+import 'package:util/modules/category/bloc/niutask/niutask_bloc.dart';
 import 'package:util/modules/category/index.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
 import 'package:util/modules/clock/index.dart';
@@ -35,8 +38,13 @@ class _MenuPageState extends State<MenuPage> {
   // Widgets for each tab/screen
   List<Widget> _widgetOptions({Orientation direction = Orientation.portrait}) =>
       <Widget>[
-        BlocProvider(
-          create: (context) => IUTaskBloc(),
+        MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => IUTaskBloc()),
+            BlocProvider(create: (context) => INUTaskBloc()),
+            BlocProvider(create: (context) => NIUTaskBloc()),
+            BlocProvider(create: (context) => NINUTaskBloc()),
+          ],
           child: const CategoryScreen(),
         ),
         BlocProvider(
