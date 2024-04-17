@@ -210,7 +210,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final widthEachBox = (MediaQuery.of(context).size.width - 15) / 2;
-    final heightEachBox = (MediaQuery.of(context).size.height - 85) / 2;
+    final heightEachBox = (MediaQuery.of(context).size.height - 80) / 2;
     return SafeArea(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

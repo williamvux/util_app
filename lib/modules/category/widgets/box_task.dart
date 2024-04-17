@@ -56,8 +56,6 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         color: boxColor,
       ),
-      clipBehavior: Clip.antiAlias,
-      padding: const EdgeInsets.all(5),
       width: widthEachBox,
       height: heightEachBox,
       child: Stack(
@@ -84,7 +82,9 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
             ),
           ),
           Center(
-            child: SizedBox(
+            child: Container(
+              decoration: const BoxDecoration(color: Colors.transparent),
+              clipBehavior: Clip.hardEdge,
               width: widthContent,
               height: heightContent,
               child: BlocBuilder<B, TaskState>(

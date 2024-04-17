@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:util/enum/index.dart';
 import 'package:util/models/model_box.dart';
 import 'package:util/modules/category/entities/task.dart';
@@ -26,10 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      final appDocumentDirectory = Directory.current;
+    getApplicationDocumentsDirectory().then((Directory directory) {
       Hive
-        ..init(appDocumentDirectory.path)
+        ..init(directory.path)
         ..registerAdapter(TaskModelAdapter());
       Future.wait<Box<TaskModel>>([
         Hive.openBox(HiveBox.iu.name),
