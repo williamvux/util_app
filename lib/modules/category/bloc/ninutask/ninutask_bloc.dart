@@ -23,7 +23,6 @@ class NINUTaskBloc extends Bloc<TaskEvent, TaskState> {
     emit(const NINUTaskLoading());
     Future.microtask(() {
       final List<TaskModel> tasks = GetIt.I<NINUBox>().box.values.toList();
-      print(GetIt.I<NINUBox>().box.keys);
       final sortedTasks = sortTasks(tasks: tasks);
       emit(NINUTaskLoaded(tasks: sortedTasks));
     });

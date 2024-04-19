@@ -24,7 +24,6 @@ class IUTaskBloc extends Bloc<TaskEvent, TaskState> {
     emit(const IUTaskLoading());
     Future.microtask(() {
       final List<TaskModel> tasks = GetIt.I<IUBox>().box.values.toList();
-      print(GetIt.I<IUBox>().box.keys);
       final sortedTasks = sortTasks(tasks: tasks);
       emit(IUTaskLoaded(tasks: sortedTasks));
     });
