@@ -7,6 +7,7 @@ import 'package:util/modules/category/bloc/ninutask/ninutask_bloc.dart';
 import 'package:util/modules/category/bloc/niutask/niutask_bloc.dart';
 import 'package:util/modules/category/index.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
+import 'package:util/modules/clock/bloc/timer_btn/timer_btn_bloc.dart';
 import 'package:util/modules/clock/index.dart';
 
 class BottomMenu extends StatelessWidget {
@@ -37,8 +38,7 @@ class _MenuPageState extends State<MenuPage> {
   int _selectedIndex = 0;
 
   // Widgets for each tab/screen
-  List<Widget> _widgetOptions({Orientation direction = Orientation.portrait}) =>
-      <Widget>[
+  List<Widget> _widgetOptions() => <Widget>[
         MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => IUTaskBloc()),
@@ -48,9 +48,12 @@ class _MenuPageState extends State<MenuPage> {
           ],
           child: const CategoryScreen(),
         ),
-        BlocProvider(
-          create: (context) => ClockBloc(),
-          child: ClockScreen(direction: direction),
+        MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => ClockBloc()),
+            BlocProvider(create: (context) => TimerBtnBloc()),
+          ],
+          child: const ClockScreen(),
         ),
         Container(),
       ];
@@ -94,7 +97,7 @@ class _MenuPageState extends State<MenuPage> {
           .read<OrientationBloc>()
           .add(OrientationEvent(orientation: direction));
       return Scaffold(
-        body: _widgetOptions(direction: direction).elementAt(_selectedIndex),
+        body: _widgetOptions().elementAt(_selectedIndex),
         bottomNavigationBar: AnimatedContainer(
           duration: const Duration(milliseconds: 500),
           height: direction == Orientation.portrait ? 70 : 0,

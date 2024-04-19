@@ -1,13 +1,3 @@
-enum Progress {
-  initial,
-  loading,
-  loaded,
-  error,
-}
+enum Progress { initial, loading, loaded, error }
 
-enum HiveBox {
-  iu,
-  inu,
-  niu,
-  ninu,
-}
+enum HiveBox { iu, inu, niu, ninu }

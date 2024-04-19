@@ -2,12 +2,7 @@
 
 import 'package:util/modules/category/typealias/index.dart';
 
-enum TypeTask {
-  I_U,
-  I_NU,
-  NI_U,
-  NI_NU,
-}
+enum TypeTask { I_U, I_NU, NI_U, NI_NU }
 
 const TTitleTask mapBoxTitle = {
   TypeTask.I_U: 'Important, Urgent',
