@@ -9,7 +9,7 @@ import 'package:util/modules/category/enum/index.dart';
 import 'package:util/modules/category/widgets/list_tasks.dart';
 
 class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
-  List<TaskModel> tasks = const <TaskModel>[];
+  final List<TaskModel> tasks = List<TaskModel>.empty(growable: true);
   final double widthEachBox;
   final double heightEachBox;
   final String placeholder;
@@ -23,12 +23,10 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
   final void Function({
     required TaskModel task,
     required TypeTask type,
-    required int index,
-    required List<TaskModel> tasks,
   }) toggleCheckedItem;
   final void Function({
     required TypeTask type,
-    required int index,
+    required TaskModel task,
     required List<TaskModel> tasks,
   }) deleteTask;
   final void Function({required TypeTask typeTask}) deleteAllTasks;
@@ -93,7 +91,8 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
                     if (state.tasks.isEmpty) {
                       return const NoTask();
                     } else {
-                      tasks = state.tasks;
+                      tasks.clear();
+                      tasks.addAll(state.tasks);
                       return ListTasks(
                         tasks: state.tasks,
                         typeTask: typeTask,

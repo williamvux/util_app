@@ -9,12 +9,10 @@ class ListTasks extends StatelessWidget {
   final void Function({
     required TaskModel task,
     required TypeTask type,
-    required int index,
-    required List<TaskModel> tasks,
   }) toggleCheckedItem;
   final void Function({
     required TypeTask type,
-    required int index,
+    required TaskModel task,
     required List<TaskModel> tasks,
   }) deleteTask;
 
@@ -38,17 +36,12 @@ class ListTasks extends StatelessWidget {
           return ItemTask(
             task: task,
             toggleCheckedItem: ({required TaskModel task}) {
-              toggleCheckedItem(
-                index: index,
-                task: task,
-                tasks: tasks,
-                type: typeTask,
-              );
+              toggleCheckedItem(task: task, type: typeTask);
             },
             onDismissed: (DismissDirection _) {
               deleteTask(
-                index: index,
                 tasks: tasks,
+                task: task,
                 type: typeTask,
               );
             },

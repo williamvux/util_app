@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:util/bootstrap/bloc/orientation/orientation_bloc.dart';
 import 'package:util/models/constant.dart';
+import 'package:util/models/pair.dart';
 import 'package:util/modules/category/bloc/inutask/inutask_bloc.dart';
 import 'package:util/modules/category/bloc/iutask/iutask_bloc.dart';
 import 'package:util/modules/category/bloc/ninutask/ninutask_bloc.dart';
@@ -11,7 +13,7 @@ import 'package:util/modules/category/widgets/box_task.dart';
 import 'package:util/modules/category/widgets/dialog_add_task.dart';
 
 class CategoryScreen extends StatefulWidget {
-  static const String routeName = 'iutask';
+  static const String routeName = 'tasks';
   static Route route() {
     return MaterialPageRoute(
       builder: (BuildContext context) => const CategoryScreen(),
@@ -41,47 +43,29 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void _toggleCheckedItem({
     required TaskModel task,
     required TypeTask type,
-    required int index,
-    required List<TaskModel> tasks,
   }) {
     switch (type) {
       case TypeTask.I_U:
         {
-          final event = ToggleIUTask(
-            model: task,
-            index: index,
-            tasks: tasks,
-          );
+          final event = ToggleIUTask(model: task);
           context.read<IUTaskBloc>().add(event);
         }
         break;
       case TypeTask.I_NU:
         {
-          final event = ToggleINUTask(
-            model: task,
-            index: index,
-            tasks: tasks,
-          );
+          final event = ToggleINUTask(model: task);
           context.read<INUTaskBloc>().add(event);
         }
         break;
       case TypeTask.NI_U:
         {
-          final event = ToggleNIUTask(
-            model: task,
-            index: index,
-            tasks: tasks,
-          );
+          final event = ToggleNIUTask(model: task);
           context.read<NIUTaskBloc>().add(event);
         }
         break;
       case TypeTask.NI_NU:
         {
-          final event = ToggleNINUTask(
-            model: task,
-            index: index,
-            tasks: tasks,
-          );
+          final event = ToggleNINUTask(model: task);
           context.read<NINUTaskBloc>().add(event);
         }
         break;
@@ -152,24 +136,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   void _deleteTask({
     required TypeTask type,
-    required int index,
+    required TaskModel task,
     required List<TaskModel> tasks,
   }) {
     switch (type) {
       case TypeTask.I_U:
-        final event = DeleteIUTask(index: index, tasks: tasks);
+        final event = DeleteIUTask(task: task, tasks: tasks);
         context.read<IUTaskBloc>().add(event);
         break;
       case TypeTask.I_NU:
-        final event = DeleteINUTask(index: index, tasks: tasks);
+        final event = DeleteINUTask(task: task, tasks: tasks);
         context.read<INUTaskBloc>().add(event);
         break;
       case TypeTask.NI_U:
-        final event = DeleteNIUTask(index: index, tasks: tasks);
+        final event = DeleteNIUTask(task: task, tasks: tasks);
         context.read<NIUTaskBloc>().add(event);
         break;
       case TypeTask.NI_NU:
-        final event = DeleteNINUTask(index: index, tasks: tasks);
+        final event = DeleteNINUTask(task: task, tasks: tasks);
         context.read<NINUTaskBloc>().add(event);
         break;
     }
@@ -201,6 +185,27 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
+  Pair<double, double> _changeSize(
+      {required Orientation orientation,
+      required Size size,
+      required TargetPlatform platform}) {
+    Map<TargetPlatform, int> platformSize = {
+      TargetPlatform.android: 100,
+      TargetPlatform.linux: 85,
+    };
+    if (orientation == Orientation.portrait) {
+      return Pair(
+        (size.width - 15) / 2,
+        (size.height - (platformSize[platform] ?? 80)) / 2,
+      );
+    } else {
+      return Pair(
+        (size.width - 15) / 2,
+        (size.height - 35) / 2,
+      );
+    }
+  }
+
   @override
   void dispose() {
     _taskCtrl.dispose();
@@ -209,69 +214,80 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final widthEachBox = (MediaQuery.of(context).size.width - 15) / 2;
-    final heightEachBox = (MediaQuery.of(context).size.height - 80) / 2;
-    return SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Row(
+    // final widthEachBox = (MediaQuery.of(context).size.width - 15) / 2;
+    // final heightEachBox = (MediaQuery.of(context).size.height - 100) / 2;
+    return BlocBuilder<OrientationBloc, OrientationState>(
+      builder: (BuildContext context, OrientationState state) {
+        final size = _changeSize(
+          orientation: state.orientation,
+          size: MediaQuery.of(context).size,
+          platform: Theme.of(context).platform,
+        );
+        final widthEachBox = size.first;
+        final heightEachBox = size.second;
+        return SafeArea(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              BoxTask<IUTaskBloc>(
-                widthEachBox: widthEachBox,
-                heightEachBox: heightEachBox,
-                placeholder: 'Important\nUrgent',
-                boxColor: Colors.red.shade200,
-                deleteAllTasks: _deleteAllTasks,
-                typeTask: TypeTask.I_U,
-                openDialog: _openDialogAddTask,
-                toggleCheckedItem: _toggleCheckedItem,
-                deleteTask: _deleteTask,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  BoxTask<IUTaskBloc>(
+                    widthEachBox: widthEachBox,
+                    heightEachBox: heightEachBox,
+                    placeholder: 'Important\nUrgent',
+                    boxColor: Colors.red.shade200,
+                    deleteAllTasks: _deleteAllTasks,
+                    typeTask: TypeTask.I_U,
+                    openDialog: _openDialogAddTask,
+                    toggleCheckedItem: _toggleCheckedItem,
+                    deleteTask: _deleteTask,
+                  ),
+                  BoxTask<INUTaskBloc>(
+                    widthEachBox: widthEachBox,
+                    heightEachBox: heightEachBox,
+                    placeholder: 'Important\nNot Urgent',
+                    boxColor: Colors.green.shade200,
+                    typeTask: TypeTask.I_NU,
+                    openDialog: _openDialogAddTask,
+                    deleteAllTasks: _deleteAllTasks,
+                    toggleCheckedItem: _toggleCheckedItem,
+                    deleteTask: _deleteTask,
+                  ),
+                ],
               ),
-              BoxTask<INUTaskBloc>(
-                widthEachBox: widthEachBox,
-                heightEachBox: heightEachBox,
-                placeholder: 'Important\nNot Urgent',
-                boxColor: Colors.green.shade200,
-                typeTask: TypeTask.I_NU,
-                openDialog: _openDialogAddTask,
-                deleteAllTasks: _deleteAllTasks,
-                toggleCheckedItem: _toggleCheckedItem,
-                deleteTask: _deleteTask,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  BoxTask<NIUTaskBloc>(
+                    placeholder: 'Not Important\nUrgent',
+                    widthEachBox: widthEachBox,
+                    heightEachBox: heightEachBox,
+                    boxColor: Colors.blue.shade200,
+                    typeTask: TypeTask.NI_U,
+                    openDialog: _openDialogAddTask,
+                    deleteAllTasks: _deleteAllTasks,
+                    toggleCheckedItem: _toggleCheckedItem,
+                    deleteTask: _deleteTask,
+                  ),
+                  BoxTask<NINUTaskBloc>(
+                    widthEachBox: widthEachBox,
+                    heightEachBox: heightEachBox,
+                    placeholder: 'Not Important\nNot Urgent',
+                    boxColor: Colors.amber.shade200,
+                    typeTask: TypeTask.NI_NU,
+                    openDialog: _openDialogAddTask,
+                    deleteAllTasks: _deleteAllTasks,
+                    toggleCheckedItem: _toggleCheckedItem,
+                    deleteTask: _deleteTask,
+                  ),
+                ],
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              BoxTask<NIUTaskBloc>(
-                placeholder: 'Not Important\nUrgent',
-                widthEachBox: widthEachBox,
-                heightEachBox: heightEachBox,
-                boxColor: Colors.blue.shade200,
-                typeTask: TypeTask.NI_U,
-                openDialog: _openDialogAddTask,
-                deleteAllTasks: _deleteAllTasks,
-                toggleCheckedItem: _toggleCheckedItem,
-                deleteTask: _deleteTask,
-              ),
-              BoxTask<NINUTaskBloc>(
-                widthEachBox: widthEachBox,
-                heightEachBox: heightEachBox,
-                placeholder: 'Not Important\nNot Urgent',
-                boxColor: Colors.amber.shade200,
-                typeTask: TypeTask.NI_NU,
-                openDialog: _openDialogAddTask,
-                deleteAllTasks: _deleteAllTasks,
-                toggleCheckedItem: _toggleCheckedItem,
-                deleteTask: _deleteTask,
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -64,7 +64,6 @@ class DialogAddTask extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton.icon(
             onPressed: () {
-              print([67, typeTask, tasks]);
               onAddTask(typeTask: typeTask, tasks: tasks);
             },
             icon: const Icon(Icons.edit, size: 20),

@@ -19,27 +19,21 @@ final class AddIUTask extends TaskEvent {
 
 final class ToggleIUTask extends TaskEvent {
   final TaskModel model;
-  final int index;
-  final List<TaskModel> tasks;
 
-  const ToggleIUTask({
-    required this.model,
-    required this.index,
-    required this.tasks,
-  });
+  const ToggleIUTask({required this.model});
 
   @override
-  List<Object> get props => [model, index, tasks];
+  List<Object> get props => [model];
 }
 
 final class DeleteIUTask extends TaskEvent {
-  final int index;
+  final TaskModel task;
   final List<TaskModel> tasks;
 
-  const DeleteIUTask({required this.index, required this.tasks});
+  const DeleteIUTask({required this.task, required this.tasks});
 
   @override
-  List<Object> get props => [index, tasks];
+  List<Object> get props => [task, tasks];
 }
 
 final class DeleteAllIUTasks extends TaskEvent {

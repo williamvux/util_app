@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:util/bootstrap/bloc/orientation/orientation_bloc.dart';
 import 'package:util/modules/category/bloc/inutask/inutask_bloc.dart';
 import 'package:util/modules/category/bloc/iutask/iutask_bloc.dart';
 import 'package:util/modules/category/bloc/ninutask/ninutask_bloc.dart';
@@ -89,11 +90,14 @@ class _MenuPageState extends State<MenuPage> {
       final Orientation direction = constraints.maxHeight > constraints.maxWidth
           ? Orientation.portrait
           : Orientation.landscape;
+      context
+          .read<OrientationBloc>()
+          .add(OrientationEvent(orientation: direction));
       return Scaffold(
         body: _widgetOptions(direction: direction).elementAt(_selectedIndex),
         bottomNavigationBar: AnimatedContainer(
           duration: const Duration(milliseconds: 500),
-          height: direction == Orientation.portrait ? null : 0,
+          height: direction == Orientation.portrait ? 70 : 0,
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.grey[300],

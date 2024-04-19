@@ -22,46 +22,58 @@ class IUTaskBloc extends Bloc<TaskEvent, TaskState> {
     Emitter<TaskState> emit,
   ) {
     emit(const IUTaskLoading());
-    emit(IUTaskLoaded(tasks: GetIt.I<IUBox>().box.values.toList()));
+    Future.microtask(() {
+      final List<TaskModel> tasks = GetIt.I<IUBox>().box.values.toList();
+      print(GetIt.I<IUBox>().box.keys);
+      final sortedTasks = sortTasks(tasks: tasks);
+      emit(IUTaskLoaded(tasks: sortedTasks));
+    });
   }
 
   void _addIUTask(
     AddIUTask event,
     Emitter<TaskState> emit,
-  ) {
-    GetIt.I<IUBox>().box.add(event.model);
+  ) async {
+    await GetIt.I<IUBox>().box.put(event.model.uuid, event.model);
+
     final tasks = List<TaskModel>.from(event.tasks)..add(event.model);
-    emit(IUTaskLoaded(tasks: tasks));
+    final sortedTask = sortTasks(tasks: tasks);
+
+    emit(IUTaskLoaded(tasks: sortedTask));
   }
 
   void _handleDeleteAllIUTasks(
     DeleteAllIUTasks event,
     Emitter<TaskState> emit,
-  ) {
+  ) async {
+    await GetIt.I<IUBox>().box.clear();
     emit(const IUTaskLoaded(tasks: []));
   }
 
   void _toggleItemIUTask(
     ToggleIUTask event,
     Emitter<TaskState> emit,
-  ) {
-    GetIt.I<IUBox>().box.putAt(event.index, event.model);
+  ) async {
+    await GetIt.I<IUBox>().box.put(event.model.uuid, event.model);
 
-    final tasks = List<TaskModel>.from(event.tasks);
-    tasks[event.index] = event.model;
+    final tasks = GetIt.I<IUBox>().box.values.toList();
+    final sortedTasks = sortTasks(tasks: tasks);
 
-    emit(IUTaskLoaded(tasks: tasks));
+    emit(IUTaskLoaded(tasks: sortedTasks));
   }
 
   void _deleteIUTask(
     DeleteIUTask event,
     Emitter<TaskState> emit,
-  ) {
-    GetIt.I<IUBox>().box.deleteAt(event.index);
+  ) async {
+    await GetIt.I<IUBox>().box.delete(event.task.uuid);
 
-    final tasks = List<TaskModel>.from(event.tasks);
-    tasks.removeAt(event.index);
+    List<TaskModel> tasks = List<TaskModel>.from(event.tasks);
+    final sortedTask = sortTasks(
+        tasks: tasks
+            .where((TaskModel task) => task.uuid != event.task.uuid)
+            .toList());
 
-    emit(IUTaskLoaded(tasks: tasks));
+    emit(IUTaskLoaded(tasks: sortedTask));
   }
 }
