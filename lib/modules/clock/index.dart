@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:util/bootstrap/bloc/orientation/orientation_bloc.dart';
 import 'package:util/models/pair.dart';
 import 'package:util/models/triple.dart';
-import 'package:util/modules/clock/components/clock_picker.dart';
+import 'package:util/modules/clock/bloc/change_time/change_time_bloc.dart';
 import 'package:util/modules/clock/entities/timer.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
 import 'package:util/modules/clock/enum/index.dart';
 import 'package:util/modules/clock/widgets/clock.dart';
+import 'package:util/modules/clock/widgets/dialog_time_picker.dart';
 import 'package:util/modules/clock/widgets/timer_btn.dart';
 import 'package:util/utils/index.dart';
 
@@ -85,26 +85,12 @@ class _ClockScreenState extends State<ClockScreen> {
       context: context,
       builder: (BuildContext context) {
         final boxRadius = BorderRadius.circular(20.0);
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: boxRadius,
-          ), //this right here
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  ClockPicker(label: 'HH', arr: arrHH),
-                  ClockPicker(label: 'MM', arr: arrMMSS),
-                  ClockPicker(label: 'SS', arr: arrMMSS),
-                ],
-              ),
-              const Text('Hello'),
-            ],
-          ),
+        return BlocProvider(
+          create: (context) => ChangeTimeBloc()
+            ..add(const ChangeTimeEvent(number: 0, unit: TimeUnit.HH))
+            ..add(const ChangeTimeEvent(number: 0, unit: TimeUnit.MM))
+            ..add(const ChangeTimeEvent(number: 0, unit: TimeUnit.SS)),
+          child: DialogTimePicker(boxRadius: boxRadius),
         );
       },
     );

@@ -1,8 +1,12 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:util/modules/clock/entities/time_label.dart';
 import 'package:util/modules/clock/typealias/index.dart';
 
 enum TimeStatus { set, start, pause, resume }
+
+enum TimeUnit { HH, MM, SS }
 
 const MapTimeLbl mapTimeLabel = {
   TimeStatus.set: TimeLabel(icon: Icon(Icons.edit), label: 'SET'),
