@@ -7,13 +7,13 @@ sealed class TimerBtnEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class SetupClock extends TimerBtnEvent {
+final class SetupTimeClock extends TimerBtnEvent {
   final TimeStatus status;
   final int hour;
   final int minute;
   final int second;
 
-  const SetupClock({
+  const SetupTimeClock({
     required this.status,
     required this.hour,
     required this.minute,

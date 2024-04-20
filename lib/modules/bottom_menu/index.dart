@@ -6,8 +6,10 @@ import 'package:util/modules/category/bloc/iutask/iutask_bloc.dart';
 import 'package:util/modules/category/bloc/ninutask/ninutask_bloc.dart';
 import 'package:util/modules/category/bloc/niutask/niutask_bloc.dart';
 import 'package:util/modules/category/index.dart';
+import 'package:util/modules/clock/bloc/change_time/change_time_bloc.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
 import 'package:util/modules/clock/bloc/timer_btn/timer_btn_bloc.dart';
+import 'package:util/modules/clock/enum/index.dart';
 import 'package:util/modules/clock/index.dart';
 
 class BottomMenu extends StatelessWidget {
@@ -66,21 +68,9 @@ class _MenuPageState extends State<MenuPage> {
 
   BottomNavigationBarItem _renderIcon(IconData iconMenu) {
     return BottomNavigationBarItem(
-      icon: Icon(
-        iconMenu,
-      ),
+      icon: Icon(iconMenu),
       label: "Home",
-      activeIcon: Container(
-        width: 70,
-        height: 35,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.deepPurple.shade100,
-        ),
-        child: Icon(
-          iconMenu,
-        ),
-      ),
+      activeIcon: Icon(iconMenu, size: 25),
     );
   }
 
@@ -93,14 +83,13 @@ class _MenuPageState extends State<MenuPage> {
       final Orientation direction = constraints.maxHeight > constraints.maxWidth
           ? Orientation.portrait
           : Orientation.landscape;
-      context
-          .read<OrientationBloc>()
-          .add(OrientationEvent(orientation: direction));
+      context.read<OrientationBloc>().add(OrientationEvent(orientation: direction));
       return Scaffold(
         body: _widgetOptions().elementAt(_selectedIndex),
         bottomNavigationBar: AnimatedContainer(
           duration: const Duration(milliseconds: 500),
-          height: direction == Orientation.portrait ? 70 : 0,
+          height: direction == Orientation.portrait ? 80 : 0,
+          padding: const EdgeInsets.all(0),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.grey[300],
@@ -109,6 +98,8 @@ class _MenuPageState extends State<MenuPage> {
               _renderIcon(Icons.av_timer_rounded),
               _renderIcon(Icons.task_alt),
             ],
+            iconSize: 20,
+            enableFeedback: true,
             currentIndex: _selectedIndex,
             selectedItemColor: Colors.indigo[900], // Color for selected item
             onTap: _onItemTapped,

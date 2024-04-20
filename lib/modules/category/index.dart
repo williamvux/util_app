@@ -86,30 +86,22 @@ class _CategoryScreenState extends State<CategoryScreen> {
       switch (typeTask) {
         case TypeTask.I_U:
           {
-            context
-                .read<IUTaskBloc>()
-                .add(AddIUTask(model: model, tasks: tasks));
+            context.read<IUTaskBloc>().add(AddIUTask(model: model, tasks: tasks));
           }
           break;
         case TypeTask.I_NU:
           {
-            context
-                .read<INUTaskBloc>()
-                .add(AddINUTask(model: model, tasks: tasks));
+            context.read<INUTaskBloc>().add(AddINUTask(model: model, tasks: tasks));
           }
           break;
         case TypeTask.NI_U:
           {
-            context
-                .read<NIUTaskBloc>()
-                .add(AddNIUTask(model: model, tasks: tasks));
+            context.read<NIUTaskBloc>().add(AddNIUTask(model: model, tasks: tasks));
           }
           break;
         case TypeTask.NI_NU:
           {
-            context
-                .read<NINUTaskBloc>()
-                .add(AddNINUTask(model: model, tasks: tasks));
+            context.read<NINUTaskBloc>().add(AddNINUTask(model: model, tasks: tasks));
           }
           break;
       }
@@ -186,12 +178,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 
   Pair<double, double> _changeSize(
-      {required Orientation orientation,
-      required Size size,
-      required TargetPlatform platform}) {
+      {required Orientation orientation, required Size size, required TargetPlatform platform}) {
     Map<TargetPlatform, int> platformSize = {
       TargetPlatform.android: 100,
       TargetPlatform.linux: 85,
+      TargetPlatform.iOS: 155,
     };
     if (orientation == Orientation.portrait) {
       return Pair(
@@ -200,7 +191,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       );
     } else {
       return Pair(
-        (size.width - 15) / 2,
+        (size.width - (platform == TargetPlatform.iOS ? 150 : 15)) / 2,
         (size.height - 35) / 2,
       );
     }

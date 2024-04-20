@@ -30,8 +30,8 @@ class TimerBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TimerBtnBloc, TimerBtnState>(
       builder: (context, state) {
-        print([20, 'Print check re-render']);
         final btn = mapTimeLabel[state.timeStatus]!;
+        print([20, 'Print check re-render', btn.label]);
 
         return FloatingActionButton.extended(
           onPressed: func(state),

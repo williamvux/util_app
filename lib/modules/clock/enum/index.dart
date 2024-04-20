@@ -16,9 +16,9 @@ const MapTimeLbl mapTimeLabel = {
 };
 
 final List<int> arrHH = List<int>.generate(
-  23,
-  (int index) => index + 1,
+  24,
+  (int index) => index,
   growable: false,
 );
 
-final List<int> arrMMSS = List<int>.generate(59, (int index) => index + 1);
+final List<int> arrMMSS = List<int>.generate(60, (int index) => index);

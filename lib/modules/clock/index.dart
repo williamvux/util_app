@@ -7,6 +7,7 @@ import 'package:util/bootstrap/bloc/orientation/orientation_bloc.dart';
 import 'package:util/models/pair.dart';
 import 'package:util/models/triple.dart';
 import 'package:util/modules/clock/bloc/change_time/change_time_bloc.dart';
+import 'package:util/modules/clock/bloc/timer_btn/timer_btn_bloc.dart';
 import 'package:util/modules/clock/entities/timer.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
 import 'package:util/modules/clock/enum/index.dart';
@@ -43,7 +44,8 @@ class _ClockScreenState extends State<ClockScreen> {
   }
 
   void _setUpPort() {
-    port.listen((pair) {
+    port.listen((dynamic params) {
+      final pair = params as Pair<String, int>;
       context.read<ClockBloc>().add(
             SetupClock(
               timer: TimerEntity(
@@ -52,19 +54,27 @@ class _ClockScreenState extends State<ClockScreen> {
               ),
             ),
           );
+      if (pair.second == 0) {
+        context.read<TimerBtnBloc>().add(
+              SetupTimeClock(
+                status: TimeStatus.set,
+                hour: hour,
+                minute: minute,
+                second: second,
+              ),
+            );
+      }
     });
   }
 
   void _setUpClock(Triple<int, int, int> triple) {
     isolate?.kill();
-    final int seconds =
-        triple.first * 60 * 60 + triple.second * 60 + triple.third;
+    final int seconds = triple.first * 60 * 60 + triple.second * 60 + triple.third;
     Isolate.spawn(
       (Pair<SendPort, int> pair) {
         int seconds = pair.second;
         Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-          pair.first
-              .send(Pair<String, int>(secondsToHms(seconds: seconds), seconds));
+          pair.first.send(Pair<String, int>(secondsToHms(seconds: seconds), seconds));
           if (seconds == 0) {
             timer.cancel();
           }
@@ -77,7 +87,33 @@ class _ClockScreenState extends State<ClockScreen> {
       ),
     ).then((value) {
       isolate = value;
+
+      context.read<TimerBtnBloc>().add(
+            SetupTimeClock(
+              status: TimeStatus.pause,
+              hour: hour,
+              minute: minute,
+              second: second,
+            ),
+          );
     });
+  }
+
+  void _setUpBtnClock({required int hour, required int minute, required int second}) {
+    final seconds = hour * 60 * 60 + minute * 60 + second;
+    final timerEntity = TimerEntity(
+      timer: secondsToHms(seconds: seconds),
+      seconds: seconds,
+    );
+    context.read<TimerBtnBloc>().add(
+          SetupTimeClock(
+            status: TimeStatus.start,
+            hour: hour,
+            minute: minute,
+            second: second,
+          ),
+        );
+    context.read<ClockBloc>().add(SetupClock(timer: timerEntity));
   }
 
   void _openDialogSetTime() {
@@ -90,7 +126,7 @@ class _ClockScreenState extends State<ClockScreen> {
             ..add(const ChangeTimeEvent(number: 0, unit: TimeUnit.HH))
             ..add(const ChangeTimeEvent(number: 0, unit: TimeUnit.MM))
             ..add(const ChangeTimeEvent(number: 0, unit: TimeUnit.SS)),
-          child: DialogTimePicker(boxRadius: boxRadius),
+          child: DialogTimePicker(boxRadius: boxRadius, setUpBtnClock: _setUpBtnClock),
         );
       },
     );
