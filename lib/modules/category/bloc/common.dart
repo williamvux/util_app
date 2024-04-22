@@ -20,7 +20,7 @@ abstract class TaskState extends Equatable {
 }
 
 List<TaskModel> sortTasks({required List<TaskModel> tasks}) {
-  Pair<List<TaskModel>, List<TaskModel>> pair = Pair(
+  final Pair<List<TaskModel>, List<TaskModel>> pair = Pair(
     List<TaskModel>.empty(growable: true),
     List<TaskModel>.empty(growable: true),
   );
