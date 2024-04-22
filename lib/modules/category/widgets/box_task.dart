@@ -6,6 +6,7 @@ import 'package:util/modules/category/components/loading.dart';
 import 'package:util/modules/category/components/no_task.dart';
 import 'package:util/modules/category/entities/task.dart';
 import 'package:util/modules/category/enum/index.dart';
+import 'package:util/modules/category/widgets/inherited_category.dart';
 import 'package:util/modules/category/widgets/list_tasks.dart';
 
 class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
@@ -15,21 +16,6 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
   final String placeholder;
   final Color boxColor;
   final TypeTask typeTask;
-  final void Function({
-    required TypeTask typeTask,
-    required Color color,
-    required List<TaskModel> tasks,
-  }) openDialog;
-  final void Function({
-    required TaskModel task,
-    required TypeTask type,
-  }) toggleCheckedItem;
-  final void Function({
-    required TypeTask type,
-    required TaskModel task,
-    required List<TaskModel> tasks,
-  }) deleteTask;
-  final void Function({required TypeTask typeTask}) deleteAllTasks;
 
   BoxTask({
     super.key,
@@ -37,11 +23,7 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
     required this.heightEachBox,
     required this.placeholder,
     required this.boxColor,
-    required this.deleteAllTasks,
     required this.typeTask,
-    required this.openDialog,
-    required this.toggleCheckedItem,
-    required this.deleteTask,
   });
 
   @override
@@ -49,6 +31,7 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
     final heightContent = heightEachBox - 10;
     final widthContent = widthEachBox - 10;
     const borderRadius = 2.0;
+    final stateCat = InheritedCategory.of(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
@@ -96,8 +79,6 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
                       return ListTasks(
                         tasks: state.tasks,
                         typeTask: typeTask,
-                        toggleCheckedItem: toggleCheckedItem,
-                        deleteTask: deleteTask,
                       );
                     }
                   } else {
@@ -114,7 +95,7 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    openDialog(
+                    stateCat.openDialogAddTask(
                       typeTask: typeTask,
                       color: boxColor,
                       tasks: tasks,
@@ -130,7 +111,7 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    deleteAllTasks(typeTask: typeTask);
+                    stateCat.deleteAllTasks(typeTask: typeTask);
                   },
                   visualDensity: VisualDensity.compact,
                   padding: EdgeInsets.zero,

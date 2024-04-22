@@ -6,10 +6,8 @@ import 'package:util/modules/category/bloc/iutask/iutask_bloc.dart';
 import 'package:util/modules/category/bloc/ninutask/ninutask_bloc.dart';
 import 'package:util/modules/category/bloc/niutask/niutask_bloc.dart';
 import 'package:util/modules/category/index.dart';
-import 'package:util/modules/clock/bloc/change_time/change_time_bloc.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
 import 'package:util/modules/clock/bloc/timer_btn/timer_btn_bloc.dart';
-import 'package:util/modules/clock/enum/index.dart';
 import 'package:util/modules/clock/index.dart';
 
 class BottomMenu extends StatelessWidget {
@@ -83,7 +81,9 @@ class _MenuPageState extends State<MenuPage> {
       final Orientation direction = constraints.maxHeight > constraints.maxWidth
           ? Orientation.portrait
           : Orientation.landscape;
-      context.read<OrientationBloc>().add(OrientationEvent(orientation: direction));
+      context
+          .read<OrientationBloc>()
+          .add(OrientationEvent(orientation: direction));
       return Scaffold(
         body: _widgetOptions().elementAt(_selectedIndex),
         bottomNavigationBar: AnimatedContainer(

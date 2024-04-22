@@ -8,19 +8,20 @@ class DialogAddTask extends StatelessWidget {
     required List<TaskModel> tasks,
   }) onAddTask;
   final List<TaskModel> tasks;
-  final TextEditingController _taskCtrl;
+  final TextEditingController taskCtrl;
   final TypeTask typeTask;
   final Color color;
   final BorderRadiusGeometry boxRadius;
+
   const DialogAddTask({
     super.key,
-    required TextEditingController taskCtrl,
+    required this.taskCtrl,
     required this.onAddTask,
     required this.typeTask,
     required this.color,
     required this.boxRadius,
     required this.tasks,
-  }) : _taskCtrl = taskCtrl;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class DialogAddTask extends StatelessWidget {
           FractionallySizedBox(
             widthFactor: 0.9,
             child: TextField(
-              controller: _taskCtrl,
+              controller: taskCtrl,
               decoration: const InputDecoration(
                 hintText: 'Task',
               ),
