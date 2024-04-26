@@ -9,6 +9,8 @@ import 'package:util/modules/category/index.dart';
 import 'package:util/modules/clock/bloc/clock_bloc/clock_bloc.dart';
 import 'package:util/modules/clock/bloc/timer_btn/timer_btn_bloc.dart';
 import 'package:util/modules/clock/index.dart';
+import 'package:util/modules/todolist/bloc/todo/todo_bloc.dart';
+import 'package:util/modules/todolist/index.dart';
 
 class BottomMenu extends StatelessWidget {
   static const String routeName = 'bottom_menu';
@@ -55,7 +57,10 @@ class _MenuPageState extends State<MenuPage> {
           ],
           child: const ClockScreen(),
         ),
-        Container(),
+        BlocProvider(
+          create: (context) => TodoBloc(),
+          child: const TodoScreen(),
+        ),
       ];
 
   void _onItemTapped(int index) {
@@ -79,6 +84,7 @@ class _MenuPageState extends State<MenuPage> {
       _ => 60
     };
   }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (
@@ -96,7 +102,9 @@ class _MenuPageState extends State<MenuPage> {
         body: _widgetOptions().elementAt(_selectedIndex),
         bottomNavigationBar: AnimatedContainer(
           duration: const Duration(milliseconds: 500),
-          height: direction == Orientation.portrait ? sizeBottomBar(platform: platform) : 0,
+          height: direction == Orientation.portrait
+              ? sizeBottomBar(platform: platform)
+              : 0,
           padding: const EdgeInsets.all(0),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,

@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class NoTask extends StatefulWidget {
-  const NoTask({super.key});
+  final Color color;
+  const NoTask({super.key, this.color = Colors.white});
 
   @override
   State<NoTask> createState() => _NoTaskState();
@@ -40,14 +41,14 @@ class _NoTaskState extends State<NoTask> with SingleTickerProviderStateMixin {
           AnimatedIcon(
             icon: AnimatedIcons.list_view,
             progress: animation,
-            color: Colors.white,
+            color: widget.color,
             semanticLabel: 'Empty',
           ),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             'There is no task!',
             style: TextStyle(
-              color: Colors.white,
+              color: widget.color,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),

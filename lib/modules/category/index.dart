@@ -186,10 +186,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
-  Pair<double, double> _changeSize(
-      {required Orientation orientation,
-      required Size size,
-      required TargetPlatform platform,}) {
+  Pair<double, double> _changeSize({
+    required Orientation orientation,
+    required Size size,
+    required TargetPlatform platform,
+  }) {
     Map<TargetPlatform, int> platformSize = {
       TargetPlatform.android: 111,
       TargetPlatform.linux: 85,

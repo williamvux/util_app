@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:util/modules/category/entities/task.dart';
+import 'package:util/modules/todolist/entities/todo.dart';
 
 sealed class BoxModel {
   final Box<TaskModel> box;
@@ -21,4 +22,9 @@ final class NIUBox extends BoxModel {
 
 final class NINUBox extends BoxModel {
   NINUBox({required super.box});
+}
+
+final class TodoBox {
+  final Box<TodoModel> box;
+  TodoBox({required this.box});
 }
