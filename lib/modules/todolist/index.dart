@@ -89,6 +89,11 @@ class _TodoScreenState extends State<TodoScreen> {
             onPressed: () {},
             child: const Icon(Icons.history),
           ),
+          const SizedBox(height: 10),
+          FloatingActionButton.small(
+            onPressed: () {},
+            child: const Icon(Icons.delete_forever),
+          ),
         ],
       ),
     );
