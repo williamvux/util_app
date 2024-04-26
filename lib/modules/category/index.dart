@@ -191,7 +191,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       required Size size,
       required TargetPlatform platform,}) {
     Map<TargetPlatform, int> platformSize = {
-      TargetPlatform.android: 100,
+      TargetPlatform.android: 111,
       TargetPlatform.linux: 85,
       TargetPlatform.iOS: 155,
     };

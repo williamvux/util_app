@@ -69,12 +69,14 @@ class _ClockScreenState extends State<ClockScreen> {
 
   void _setUpClock(Triple<int, int, int> triple) {
     isolate?.kill();
-    final int seconds = triple.first * 60 * 60 + triple.second * 60 + triple.third;
+    final int seconds =
+        triple.first * 60 * 60 + triple.second * 60 + triple.third;
     Isolate.spawn(
       (Pair<SendPort, int> pair) {
         int seconds = pair.second;
         Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-          pair.first.send(Pair<String, int>(secondsToHms(seconds: seconds), seconds));
+          pair.first
+              .send(Pair<String, int>(secondsToHms(seconds: seconds), seconds));
           if (seconds == 0) {
             timer.cancel();
           }
@@ -99,7 +101,11 @@ class _ClockScreenState extends State<ClockScreen> {
     });
   }
 
-  void _setUpBtnClock({required int hour, required int minute, required int second}) {
+  void _setUpBtnClock({
+    required int hour,
+    required int minute,
+    required int second,
+  }) {
     final seconds = hour * 60 * 60 + minute * 60 + second;
     final timerEntity = TimerEntity(
       timer: secondsToHms(seconds: seconds),
@@ -126,7 +132,8 @@ class _ClockScreenState extends State<ClockScreen> {
             ..add(const ChangeTimeEvent(number: 0, unit: TimeUnit.HH))
             ..add(const ChangeTimeEvent(number: 0, unit: TimeUnit.MM))
             ..add(const ChangeTimeEvent(number: 0, unit: TimeUnit.SS)),
-          child: DialogTimePicker(boxRadius: boxRadius, setUpBtnClock: _setUpBtnClock),
+          child: DialogTimePicker(
+              boxRadius: boxRadius, setUpBtnClock: _setUpBtnClock),
         );
       },
     );
@@ -143,6 +150,18 @@ class _ClockScreenState extends State<ClockScreen> {
     return width - 150;
   }
 
+  void Function() func(TimerBtnState state) => switch (state.timeStatus) {
+        TimeStatus.start => () {
+            _setUpClock(Triple(state.hour, state.minute, state.second));
+          },
+        TimeStatus.pause => () {
+            _setUpClock(Triple(state.hour, state.minute, state.second));
+          },
+        TimeStatus.set => _openDialogSetTime,
+        TimeStatus.resume => () {
+            _setUpClock(Triple(state.hour, state.minute, state.second));
+          },
+      };
   @override
   void dispose() {
     port.close();
@@ -160,19 +179,35 @@ class _ClockScreenState extends State<ClockScreen> {
         );
         return Scaffold(
           backgroundColor: Colors.blue.shade50,
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ClockWidget(widthClock: widthClock),
-                const SizedBox(height: 50),
-                TimerBtn(
-                  setUpClock: _setUpClock,
-                  openDialogSetTime: _openDialogSetTime,
-                ),
-              ],
-            ),
+          body: BlocBuilder<TimerBtnBloc, TimerBtnState>(
+            builder: (context, timeState) {
+              final btn = mapTimeLabel[timeState.timeStatus]!;
+              final isPauseState = timeState.timeStatus == TimeStatus.pause;
+              return Center(
+                child: state.orientation == Orientation.portrait
+                    ? isPauseState
+                        ? ClockWidget(widthClock: widthClock)
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ClockWidget(widthClock: widthClock),
+                              const SizedBox(height: 50),
+                              TimerBtn(onPressed: func(timeState), btn: btn),
+                            ],
+                          )
+                    : isPauseState
+                        ? ClockWidget(widthClock: widthClock)
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ClockWidget(widthClock: widthClock),
+                              TimerBtn(onPressed: func(timeState), btn: btn),
+                            ],
+                          ),
+              );
+            },
           ),
         );
       },
