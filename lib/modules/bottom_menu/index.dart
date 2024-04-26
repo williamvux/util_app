@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:util/bootstrap/bloc/orientation/orientation_bloc.dart';
@@ -72,6 +74,13 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
+  double sizeBottomBar({required TargetPlatform platform}) {
+    return switch (platform) {
+      TargetPlatform.iOS => 80,
+      TargetPlatform.android => 60,
+      _ => 60
+    };
+  }
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (
@@ -84,11 +93,12 @@ class _MenuPageState extends State<MenuPage> {
       context
           .read<OrientationBloc>()
           .add(OrientationEvent(orientation: direction));
+      final platform = Theme.of(context).platform;
       return Scaffold(
         body: _widgetOptions().elementAt(_selectedIndex),
         bottomNavigationBar: AnimatedContainer(
           duration: const Duration(milliseconds: 500),
-          height: direction == Orientation.portrait ? 80 : 0,
+          height: direction == Orientation.portrait ? sizeBottomBar(platform: platform) : 0,
           padding: const EdgeInsets.all(0),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
