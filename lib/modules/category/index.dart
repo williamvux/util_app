@@ -33,7 +33,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1)).then((_) {
+    Future.microtask(() {
       context.read<IUTaskBloc>().add(const LoadingIUTasks());
       context.read<INUTaskBloc>().add(const LoadingINUTasks());
       context.read<NIUTaskBloc>().add(const LoadingNIUTasks());

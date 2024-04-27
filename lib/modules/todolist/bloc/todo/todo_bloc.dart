@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:util/enum/index.dart';
+import 'package:util/models/constant.dart';
 import 'package:util/models/model_box.dart';
 import 'package:util/models/pair.dart';
 import 'package:util/modules/todolist/entities/todo.dart';
@@ -20,8 +21,12 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   void _loadTodos(LoadTodos event, Emitter<TodoState> emit) async {
     emit(const TodoLoading());
-    await Future.delayed(const Duration(seconds: 1));
-    final sortedTodos = _sortTodos(todos: GetIt.I<TodoBox>().box.values.toList());
+    final now = Constant.now('dd-MM-yyyy');
+    final sortedTodos = _sortTodos(
+      todos: GetIt.I<TodoBox>().box.values.where((TodoModel todo) {
+        return todo.datetime == now;
+      }).toList(),
+    );
     emit(TodoLoaded(todos: sortedTodos));
   }
 
