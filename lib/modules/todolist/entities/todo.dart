@@ -23,7 +23,11 @@ final class TodoModel extends HiveObject {
     required this.datetime,
   });
 
-  TodoModel copyWith({String? title, bool? isChecked, String? datetime,}) =>
+  TodoModel copyWith({
+    String? title,
+    bool? isChecked,
+    String? datetime,
+  }) =>
       TodoModel(
         uuid: uuid,
         title: title ?? this.title,

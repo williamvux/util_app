@@ -162,9 +162,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       builder: (BuildContext context) {
         final boxRadius = BorderRadius.circular(20.0);
         return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: boxRadius,
-          ), //this right here
+          shape: RoundedRectangleBorder(borderRadius: boxRadius), //this right here
           child: DialogAddTask(
             taskCtrl: _taskCtrl,
             typeTask: typeTask,

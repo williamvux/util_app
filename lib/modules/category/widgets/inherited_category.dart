@@ -3,9 +3,6 @@ import 'package:util/modules/category/entities/task.dart';
 import 'package:util/modules/category/enum/index.dart';
 
 class InheritedCategory extends InheritedWidget {
-  @override
-  final Widget child;
-
   final void Function({
     required TypeTask typeTask,
     required Color color,
@@ -27,12 +24,12 @@ class InheritedCategory extends InheritedWidget {
 
   const InheritedCategory({
     super.key,
-    required this.child,
+    required super.child,
     required this.openDialogAddTask,
     required this.deleteTask,
     required this.deleteAllTasks,
     required this.toggleCheckedItem,
-  }) : super(child: child);
+  });
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) {

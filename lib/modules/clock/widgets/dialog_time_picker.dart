@@ -4,6 +4,7 @@ import 'package:util/modules/clock/bloc/change_time/change_time_bloc.dart';
 import 'package:util/modules/clock/components/clock_picker.dart';
 import 'package:util/modules/clock/enum/index.dart';
 
+// ignore: must_be_immutable
 class DialogTimePicker extends StatelessWidget {
   int hour = 0;
   int minute = 0;

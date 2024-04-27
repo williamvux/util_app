@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:util/modules/todolist/entities/todo.dart';
+import 'package:util/modules/todolist/widgets/inherit_todo.dart';
 
 class TodoItem extends StatefulWidget {
   final TodoModel todo;
@@ -17,6 +18,7 @@ class _TodoItemState extends State<TodoItem> {
   @override
   Widget build(BuildContext context) {
     final todo = widget.todo;
+    final state = InheritedTodo.of(context);
     return isDeleted
         ? const SizedBox.shrink()
         : Column(
@@ -37,7 +39,7 @@ class _TodoItemState extends State<TodoItem> {
                   ),
                 ),
                 onDismissed: (DismissDirection _) {
-                  final newTodo = todo.copyWith(isChecked: true);
+                  state.deleteTodo(todo: todo);
                   setState(() {
                     isDeleted = true;
                   });
@@ -54,7 +56,10 @@ class _TodoItemState extends State<TodoItem> {
                     ),
                     activeColor: Colors.red.shade400,
                     value: todo.isChecked,
-                    onChanged: (bool? isChecked) {},
+                    onChanged: (bool? isChecked) {
+                      final newTodo = todo.copyWith(isChecked: isChecked);
+                      state.toggleCheckedItem(todo: newTodo);
+                    },
                   ),
                   title: Text(todo.title),
                   subtitle: Text(todo.datetime ?? ''),
