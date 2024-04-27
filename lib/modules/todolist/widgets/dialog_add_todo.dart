@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:util/modules/todolist/entities/todo.dart';
 
 class DialogAddTodo extends StatelessWidget {
   final BorderRadiusGeometry boxRadius;
