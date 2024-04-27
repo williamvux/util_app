@@ -79,9 +79,9 @@ class _MenuPageState extends State<MenuPage> {
 
   double sizeBottomBar({required TargetPlatform platform}) {
     return switch (platform) {
-      TargetPlatform.iOS => 80,
+      TargetPlatform.iOS => 95,
       TargetPlatform.android => 60,
-      _ => 60
+      _ => 60,
     };
   }
 
@@ -94,17 +94,13 @@ class _MenuPageState extends State<MenuPage> {
       final Orientation direction = constraints.maxHeight > constraints.maxWidth
           ? Orientation.portrait
           : Orientation.landscape;
-      context
-          .read<OrientationBloc>()
-          .add(OrientationEvent(orientation: direction));
+      context.read<OrientationBloc>().add(OrientationEvent(orientation: direction));
       final platform = Theme.of(context).platform;
       return Scaffold(
         body: _widgetOptions().elementAt(_selectedIndex),
         bottomNavigationBar: AnimatedContainer(
           duration: const Duration(milliseconds: 500),
-          height: direction == Orientation.portrait
-              ? sizeBottomBar(platform: platform)
-              : 0,
+          height: direction == Orientation.portrait ? sizeBottomBar(platform: platform) : 0,
           padding: const EdgeInsets.all(0),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
