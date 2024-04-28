@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:util/extension/string.dart';
 import 'package:util/modules/todolist/entities/todo.dart';
 import 'package:util/modules/todolist/widgets/inherit_todo.dart';
 
@@ -61,7 +62,7 @@ class _TodoItemState extends State<TodoItem> {
                       state.toggleCheckedItem(todo: newTodo);
                     },
                   ),
-                  title: Text(todo.title),
+                  title: Text(todo.title.capitalize()),
                   subtitle: Text(todo.datetime ?? ''),
                 ),
               ),

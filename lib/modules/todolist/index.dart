@@ -4,6 +4,7 @@ import 'package:util/components/loading.dart';
 import 'package:util/components/no_task.dart';
 import 'package:util/enum/index.dart';
 import 'package:util/models/constant.dart';
+import 'package:util/modules/history/index.dart';
 import 'package:util/modules/todolist/bloc/todo/todo_bloc.dart';
 import 'package:util/modules/todolist/components/todo_item.dart';
 import 'package:util/modules/todolist/entities/todo.dart';
@@ -80,7 +81,9 @@ class _TodoScreenState extends State<TodoScreen> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(HistoryScreen.routeName);
+            },
             icon: const Icon(Icons.history_edu, color: colorAppbar),
           ),
           IconButton(

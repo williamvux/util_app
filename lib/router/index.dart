@@ -3,6 +3,7 @@ import 'package:util/modules/bottom_menu/index.dart';
 import 'package:util/modules/category/index.dart';
 import 'package:util/modules/clock/index.dart';
 import 'package:util/modules/error/index.dart';
+import 'package:util/modules/history/index.dart';
 import 'package:util/modules/splash/index.dart';
 import 'package:util/modules/todolist/index.dart';
 
@@ -19,6 +20,8 @@ class AppRouter {
         return CategoryScreen.route();
       case TodoScreen.routeName:
         return TodoScreen.route();
+      case HistoryScreen.routeName:
+        return HistoryScreen.route();
       default:
         return ErrorScreen.route();
     }
