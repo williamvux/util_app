@@ -4,14 +4,22 @@ import 'package:util/components/loading.dart';
 import 'package:util/components/no_task.dart';
 import 'package:util/enum/index.dart';
 import 'package:util/modules/history/bloc/todo/todo_bloc.dart';
+import 'package:util/modules/history/bloc/toggle/toggle_bloc.dart';
 import 'package:util/modules/history/components/item_expanded.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const String routeName = 'history';
   static Route route() {
     return MaterialPageRoute(
-      builder: (BuildContext context) => BlocProvider(
-        create: (context) => TodoBloc(),
+      builder: (BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => TodoBloc(),
+          ),
+          BlocProvider(
+            create: (context) => ToggleBloc(),
+          ),
+        ],
         child: const HistoryScreen(),
       ),
       settings: const RouteSettings(name: routeName),
