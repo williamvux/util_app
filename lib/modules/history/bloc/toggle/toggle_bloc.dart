@@ -10,7 +10,7 @@ class ToggleBloc extends Bloc<ToggleEvent, ToggleState> {
     on<ToggleEvent>((event, emit) {
       emit(ToggleState(
         datetime: event.datetime,
-        uuid: DateTime.now().toIso8601String(),
+        uuid: DateTime.now().toString(),
       ));
     });
   }

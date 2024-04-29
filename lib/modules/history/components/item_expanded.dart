@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:util/extension/string.dart';
-import 'package:util/models/constant.dart';
 import 'package:util/modules/history/bloc/toggle/toggle_bloc.dart';
 import 'package:util/modules/todolist/entities/todo.dart';
 
@@ -24,10 +23,8 @@ class _ItemExpandedState extends State<ItemExpanded> {
   bool isOpen = false;
   @override
   Widget build(BuildContext context) {
-    print([26, 're-render', widget.index]);
     return BlocListener<ToggleBloc, ToggleState>(
       listener: (context, state) {
-        print(state.uuid);
         if (state.datetime == widget.datetime) {
           setState(() {
             isOpen = !isOpen;

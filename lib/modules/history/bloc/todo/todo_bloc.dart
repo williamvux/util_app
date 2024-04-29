@@ -13,7 +13,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   TodoBloc() : super(const TodoInitial()) {
     on<LoadMapTodo>((LoadMapTodo event, Emitter<TodoState> emit) async {
       emit(const TodoLoading());
-      await Future.delayed(const Duration(seconds: 1));
       final mapTodo = <String, List<TodoModel>>{};
       for (var todo in GetIt.I<TodoBox>().box.values) {
         if (mapTodo.containsKey(todo.datetime)) {
