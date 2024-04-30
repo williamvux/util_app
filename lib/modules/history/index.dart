@@ -57,7 +57,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               return const Loading();
             }
             if (state.status == Progress.loaded && state.mapTodo.isEmpty) {
-              return const NoTask();
+              return const NoTask(color: Colors.blueGrey);
             }
             final datetimes = state.mapTodo.keys;
             return ListView.builder(
