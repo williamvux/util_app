@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:util/bootstrap/bloc/orientation/orientation_bloc.dart';
@@ -30,6 +31,7 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen> {
   final TextEditingController _taskCtrl = TextEditingController();
+  bool isIpad = false;
   @override
   void initState() {
     super.initState();
@@ -39,6 +41,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       context.read<NIUTaskBloc>().add(const LoadingNIUTasks());
       context.read<NINUTaskBloc>().add(const LoadingNINUTasks());
     });
+    checkIpad();
   }
 
   void _toggleCheckedItem({
@@ -193,10 +196,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
       );
     } else {
       return Pair(
-        (size.width - (platform == TargetPlatform.iOS ? 150 : 15)) / 2,
+        (size.width - (platform == TargetPlatform.iOS ? isIpad ? 100 : 150 : 15)) / 2,
         (size.height - 35) / 2,
       );
     }
+  }
+
+  Future<void> checkIpad() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    IosDeviceInfo info = await deviceInfo.iosInfo;
+    setState(() {
+      isIpad = info.model.toLowerCase().contains("ipad");
+    });
   }
 
   @override
