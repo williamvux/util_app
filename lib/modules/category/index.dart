@@ -196,7 +196,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       );
     } else {
       return Pair(
-        (size.width - (platform == TargetPlatform.iOS ? isIpad ? 100 : 150 : 15)) / 2,
+        (size.width - (platform == TargetPlatform.iOS ? (isIpad ? 100 : 150) : 15)) / 2,
         (size.height - 35) / 2,
       );
     }
