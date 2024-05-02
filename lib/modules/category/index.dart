@@ -192,11 +192,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
     if (orientation == Orientation.portrait) {
       return Pair(
         (size.width - 15) / 2,
-        (size.height - (platformSize[platform] ?? 80)) / 2,
+        (size.height - (isIpad ? 130 : (platformSize[platform] ?? 80))) / 2,
       );
     } else {
       return Pair(
-        (size.width - (platform == TargetPlatform.iOS ? (isIpad ? 100 : 150) : 15)) / 2,
+        (size.width - (platform == TargetPlatform.iOS ? (isIpad ? 20 : 150) : 15)) / 2,
         (size.height - 35) / 2,
       );
     }
@@ -218,6 +218,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print([221, isIpad]);
     return BlocBuilder<OrientationBloc, OrientationState>(
       builder: (BuildContext context, OrientationState state) {
         final size = _changeSize(
