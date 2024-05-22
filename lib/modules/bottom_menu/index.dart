@@ -41,14 +41,9 @@ class _MenuPageState extends State<MenuPage> {
 
   // Widgets for each tab/screen
   List<Widget> _widgetOptions() => <Widget>[
-        MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (context) => IUTaskBloc()),
-            BlocProvider(create: (context) => INUTaskBloc()),
-            BlocProvider(create: (context) => NIUTaskBloc()),
-            BlocProvider(create: (context) => NINUTaskBloc()),
-          ],
-          child: const CategoryScreen(),
+        BlocProvider(
+          create: (context) => TodoBloc(),
+          child: const TodoScreen(),
         ),
         MultiBlocProvider(
           providers: [
@@ -57,9 +52,14 @@ class _MenuPageState extends State<MenuPage> {
           ],
           child: const ClockScreen(),
         ),
-        BlocProvider(
-          create: (context) => TodoBloc(),
-          child: const TodoScreen(),
+        MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => IUTaskBloc()),
+            BlocProvider(create: (context) => INUTaskBloc()),
+            BlocProvider(create: (context) => NIUTaskBloc()),
+            BlocProvider(create: (context) => NINUTaskBloc()),
+          ],
+          child: const CategoryScreen(),
         ),
       ];
 
@@ -106,9 +106,9 @@ class _MenuPageState extends State<MenuPage> {
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.grey[300],
             items: <BottomNavigationBarItem>[
-              _renderIcon(Icons.category_rounded),
-              _renderIcon(Icons.av_timer_rounded),
               _renderIcon(Icons.task_alt),
+              _renderIcon(Icons.av_timer_rounded),
+              _renderIcon(Icons.category_rounded),
             ],
             iconSize: 20,
             enableFeedback: true,

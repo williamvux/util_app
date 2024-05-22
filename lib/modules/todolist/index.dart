@@ -75,7 +75,7 @@ class _TodoScreenState extends State<TodoScreen> {
       appBar: AppBar(
         backgroundColor: Colors.yellow.shade100,
         title: const Text(
-          'To Do List',
+          'Word List',
           style: TextStyle(fontWeight: FontWeight.bold, color: colorAppbar),
         ),
         automaticallyImplyLeading: false,
@@ -99,7 +99,7 @@ class _TodoScreenState extends State<TodoScreen> {
                         children: [
                           const SizedBox(height: 20),
                           const Text(
-                            'Delete all todos?',
+                            'Delete all words?',
                             style: TextStyle(fontSize: 20),
                           ),
                           const SizedBox(height: 20),

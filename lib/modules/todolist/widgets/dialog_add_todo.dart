@@ -31,7 +31,7 @@ class DialogAddTodo extends StatelessWidget {
         children: [
           Chip(
             label: const Text(
-              'Todo',
+              'Word',
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
@@ -47,7 +47,7 @@ class DialogAddTodo extends StatelessWidget {
             child: TextField(
               controller: todoCtrl,
               decoration: const InputDecoration(
-                hintText: 'Todo',
+                hintText: 'Word',
               ),
             ),
           ),
