@@ -11,7 +11,6 @@ import 'package:util/modules/category/widgets/list_tasks.dart';
 
 class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
   final List<TaskModel> tasks = List<TaskModel>.empty(growable: true);
-  final double widthEachBox;
   final double heightEachBox;
   final String placeholder;
   final Color boxColor;
@@ -19,7 +18,6 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
 
   BoxTask({
     super.key,
-    required this.widthEachBox,
     required this.heightEachBox,
     required this.placeholder,
     required this.boxColor,
@@ -29,7 +27,7 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final heightContent = heightEachBox - 10;
-    final widthContent = widthEachBox - 10;
+    const widthContent = double.infinity;
     const borderRadius = 2.0;
     final stateCat = InheritedCategory.of(context);
     return Container(
@@ -37,8 +35,9 @@ class BoxTask<B extends Bloc<TaskEvent, TaskState>> extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         color: boxColor,
       ),
-      width: widthEachBox,
+      width: widthContent,
       height: heightEachBox,
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Stack(
         children: [
           Center(

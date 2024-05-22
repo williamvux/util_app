@@ -1,9 +1,7 @@
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:util/bootstrap/bloc/orientation/orientation_bloc.dart';
 import 'package:util/models/constant.dart';
-import 'package:util/models/pair.dart';
 import 'package:util/modules/category/bloc/inutask/inutask_bloc.dart';
 import 'package:util/modules/category/bloc/iutask/iutask_bloc.dart';
 import 'package:util/modules/category/bloc/ninutask/ninutask_bloc.dart';
@@ -41,7 +39,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
       context.read<NIUTaskBloc>().add(const LoadingNIUTasks());
       context.read<NINUTaskBloc>().add(const LoadingNINUTasks());
     });
-    checkIpad();
   }
 
   void _toggleCheckedItem({
@@ -90,22 +87,30 @@ class _CategoryScreenState extends State<CategoryScreen> {
       switch (typeTask) {
         case TypeTask.I_U:
           {
-            context.read<IUTaskBloc>().add(AddIUTask(model: model, tasks: tasks));
+            context
+                .read<IUTaskBloc>()
+                .add(AddIUTask(model: model, tasks: tasks));
           }
           break;
         case TypeTask.I_NU:
           {
-            context.read<INUTaskBloc>().add(AddINUTask(model: model, tasks: tasks));
+            context
+                .read<INUTaskBloc>()
+                .add(AddINUTask(model: model, tasks: tasks));
           }
           break;
         case TypeTask.NI_U:
           {
-            context.read<NIUTaskBloc>().add(AddNIUTask(model: model, tasks: tasks));
+            context
+                .read<NIUTaskBloc>()
+                .add(AddNIUTask(model: model, tasks: tasks));
           }
           break;
         case TypeTask.NI_NU:
           {
-            context.read<NINUTaskBloc>().add(AddNINUTask(model: model, tasks: tasks));
+            context
+                .read<NINUTaskBloc>()
+                .add(AddNINUTask(model: model, tasks: tasks));
           }
           break;
       }
@@ -165,7 +170,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
       builder: (BuildContext context) {
         final boxRadius = BorderRadius.circular(20.0);
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: boxRadius), //this right here
+          shape:
+              RoundedRectangleBorder(borderRadius: boxRadius), //this right here
           child: DialogAddTask(
             taskCtrl: _taskCtrl,
             typeTask: typeTask,
@@ -179,36 +185,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
-  Pair<double, double> _changeSize({
-    required Orientation orientation,
-    required Size size,
-    required TargetPlatform platform,
-  }) {
-    Map<TargetPlatform, int> platformSize = {
-      TargetPlatform.android: 111,
-      TargetPlatform.linux: 85,
-      TargetPlatform.iOS: 160,
-    };
-    if (orientation == Orientation.portrait) {
-      return Pair(
-        (size.width - 15) / 2,
-        (size.height - (isIpad ? 130 : (platformSize[platform] ?? 80))) / 2,
-      );
-    } else {
-      return Pair(
-        (size.width - (platform == TargetPlatform.iOS ? (isIpad ? 20 : 150) : 15)) / 2,
-        (size.height - 35) / 2,
-      );
-    }
-  }
-
-  Future<void> checkIpad() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    IosDeviceInfo info = await deviceInfo.iosInfo;
-    setState(() {
-      isIpad = info.model.toLowerCase().contains("ipad");
-    });
-  }
 
   @override
   void dispose() {
@@ -218,63 +194,40 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print([221, isIpad]);
     return BlocBuilder<OrientationBloc, OrientationState>(
       builder: (BuildContext context, OrientationState state) {
-        final size = _changeSize(
-          orientation: state.orientation,
-          size: MediaQuery.of(context).size,
-          platform: Theme.of(context).platform,
-        );
-        final widthEachBox = size.first;
-        final heightEachBox = size.second;
+        final heightEachBox = MediaQuery.of(context).size.height / 2;
         return SafeArea(
           child: InheritedCategory(
             toggleCheckedItem: _toggleCheckedItem,
             deleteAllTasks: _deleteAllTasks,
             deleteTask: _deleteTask,
             openDialogAddTask: _openDialogAddTask,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
+            child: ListView(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    BoxTask<IUTaskBloc>(
-                      widthEachBox: widthEachBox,
-                      heightEachBox: heightEachBox,
-                      placeholder: 'Important\nUrgent',
-                      boxColor: Colors.red.shade200,
-                      typeTask: TypeTask.I_U,
-                    ),
-                    BoxTask<INUTaskBloc>(
-                      widthEachBox: widthEachBox,
-                      heightEachBox: heightEachBox,
-                      placeholder: 'Important\nNot Urgent',
-                      boxColor: Colors.green.shade200,
-                      typeTask: TypeTask.I_NU,
-                    ),
-                  ],
+                BoxTask<IUTaskBloc>(
+                  heightEachBox: heightEachBox,
+                  placeholder: 'Important\nUrgent',
+                  boxColor: Colors.red.shade200,
+                  typeTask: TypeTask.I_U,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    BoxTask<NIUTaskBloc>(
-                      placeholder: 'Not Important\nUrgent',
-                      widthEachBox: widthEachBox,
-                      heightEachBox: heightEachBox,
-                      boxColor: Colors.blue.shade200,
-                      typeTask: TypeTask.NI_U,
-                    ),
-                    BoxTask<NINUTaskBloc>(
-                      widthEachBox: widthEachBox,
-                      heightEachBox: heightEachBox,
-                      placeholder: 'Not Important\nNot Urgent',
-                      boxColor: Colors.amber.shade200,
-                      typeTask: TypeTask.NI_NU,
-                    ),
-                  ],
+                BoxTask<INUTaskBloc>(
+                  heightEachBox: heightEachBox,
+                  placeholder: 'Important\nNot Urgent',
+                  boxColor: Colors.green.shade200,
+                  typeTask: TypeTask.I_NU,
+                ),
+                BoxTask<NIUTaskBloc>(
+                  placeholder: 'Not Important\nUrgent',
+                  heightEachBox: heightEachBox,
+                  boxColor: Colors.blue.shade200,
+                  typeTask: TypeTask.NI_U,
+                ),
+                BoxTask<NINUTaskBloc>(
+                  heightEachBox: heightEachBox,
+                  placeholder: 'Not Important\nNot Urgent',
+                  boxColor: Colors.amber.shade200,
+                  typeTask: TypeTask.NI_NU,
                 ),
               ],
             ),
