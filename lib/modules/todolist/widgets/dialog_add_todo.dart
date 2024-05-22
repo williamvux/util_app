@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:util/modules/todolist/widgets/dropdown_type_word.dart';
 
-class DialogAddTodo extends StatelessWidget {
+class DialogAddTodo extends StatefulWidget {
   final BorderRadiusGeometry boxRadius;
   final TextEditingController todoCtrl;
+  final TextEditingController typeCtrl;
   final void Function() addTodo;
 
   const DialogAddTodo({
     super.key,
     required this.boxRadius,
     required this.todoCtrl,
+    required this.typeCtrl,
     required this.addTodo,
   });
 
+  @override
+  State<DialogAddTodo> createState() => _DialogAddTodoState();
+}
+
+class _DialogAddTodoState extends State<DialogAddTodo> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,15 +53,17 @@ class DialogAddTodo extends StatelessWidget {
           FractionallySizedBox(
             widthFactor: 0.9,
             child: TextField(
-              controller: todoCtrl,
+              controller: widget.todoCtrl,
               decoration: const InputDecoration(
                 hintText: 'Word',
               ),
             ),
           ),
           const SizedBox(height: 20),
+          DropdownTypeWord(typeCtrl: widget.typeCtrl),
+          const SizedBox(height: 20),
           ElevatedButton.icon(
-            onPressed: addTodo,
+            onPressed: widget.addTodo,
             icon: const Icon(Icons.edit, size: 20),
             label: const Text('Save'),
           ),

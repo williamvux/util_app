@@ -19,15 +19,16 @@ class TodoModelAdapter extends TypeAdapter<TodoModel> {
     return TodoModel(
       uuid: fields[0] as String,
       title: fields[1] as String,
+      type: fields[3] as String,
       isChecked: fields[2] as bool,
-      datetime: fields[3] as String?,
+      datetime: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, TodoModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.uuid)
       ..writeByte(1)
@@ -35,6 +36,8 @@ class TodoModelAdapter extends TypeAdapter<TodoModel> {
       ..writeByte(2)
       ..write(obj.isChecked)
       ..writeByte(3)
+      ..write(obj.type)
+      ..writeByte(4)
       ..write(obj.datetime);
   }
 

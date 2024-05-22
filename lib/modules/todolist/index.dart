@@ -28,6 +28,7 @@ class TodoScreen extends StatefulWidget {
 
 class _TodoScreenState extends State<TodoScreen> {
   final TextEditingController _todoCtrl = TextEditingController();
+  final TextEditingController _typeCtrl = TextEditingController(text: 'Noun');
   List<TodoModel> todos = const <TodoModel>[];
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _TodoScreenState extends State<TodoScreen> {
       final todo = TodoModel(
         uuid: Constant.uuid(),
         title: _todoCtrl.text.trim(),
+        type: _typeCtrl.text.trim(),
         isChecked: false,
         datetime: Constant.now('dd-MM-yyyy'),
       );
@@ -93,7 +95,8 @@ class _TodoScreenState extends State<TodoScreen> {
                   builder: (BuildContext context) {
                     final boxRadius = BorderRadius.circular(20.0);
                     return Dialog(
-                      shape: RoundedRectangleBorder(borderRadius: boxRadius), //this right here
+                      shape: RoundedRectangleBorder(
+                          borderRadius: boxRadius), //this right here
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -110,12 +113,14 @@ class _TodoScreenState extends State<TodoScreen> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                icon: const Icon(Icons.clear, color: Colors.red),
+                                icon:
+                                    const Icon(Icons.clear, color: Colors.red),
                               ),
                               const SizedBox(width: 40),
                               IconButton(
                                 onPressed: _deleteAllTodos,
-                                icon: const Icon(Icons.check, color: Colors.green),
+                                icon: const Icon(Icons.check,
+                                    color: Colors.green),
                               ),
                             ],
                           ),
@@ -141,7 +146,10 @@ class _TodoScreenState extends State<TodoScreen> {
               }
               if (state.status == Progress.loaded && state.todos.isEmpty) {
                 todos = state.todos;
-                return const NoTask(color: Colors.blueGrey);
+                return const NoTask(
+                  color: Colors.blueGrey,
+                  label: 'There is no word!',
+                );
               }
               return ListView.builder(
                 itemCount: state.todos.length,
@@ -162,11 +170,13 @@ class _TodoScreenState extends State<TodoScreen> {
             builder: (BuildContext context) {
               final boxRadius = BorderRadius.circular(20.0);
               return Dialog(
-                shape: RoundedRectangleBorder(borderRadius: boxRadius), //this right here
+                shape: RoundedRectangleBorder(
+                    borderRadius: boxRadius), //this right here
                 child: DialogAddTodo(
                   todoCtrl: _todoCtrl,
                   boxRadius: boxRadius,
                   addTodo: _addTodo,
+                  typeCtrl: _typeCtrl,
                 ),
               );
             },

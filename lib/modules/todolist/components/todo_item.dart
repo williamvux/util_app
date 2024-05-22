@@ -63,7 +63,7 @@ class _TodoItemState extends State<TodoItem> {
                     },
                   ),
                   title: Text(todo.title.capitalize()),
-                  subtitle: Text(todo.datetime ?? ''),
+                  subtitle: Text(todo.type),
                 ),
               ),
               const Divider(thickness: 0.5, height: 0),

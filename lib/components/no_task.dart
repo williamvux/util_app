@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 
 class NoTask extends StatefulWidget {
   final Color color;
-  const NoTask({super.key, this.color = Colors.white});
+  final String label;
+  const NoTask({
+    super.key,
+    this.color = Colors.white,
+    this.label = 'There is no task!',
+  });
 
   @override
   State<NoTask> createState() => _NoTaskState();
@@ -46,7 +51,7 @@ class _NoTaskState extends State<NoTask> with SingleTickerProviderStateMixin {
           ),
           const SizedBox(height: 10),
           Text(
-            'There is no task!',
+            widget.label,
             style: TextStyle(
               color: widget.color,
               fontWeight: FontWeight.bold,
