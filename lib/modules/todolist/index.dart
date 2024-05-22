@@ -46,6 +46,7 @@ class _TodoScreenState extends State<TodoScreen> {
         datetime: Constant.now('dd-MM-yyyy'),
       );
       context.read<TodoBloc>().add(AddTodo(todo: todo, todos: todos));
+      _todoCtrl.text = '';
       Navigator.of(context).pop();
     }
   }
